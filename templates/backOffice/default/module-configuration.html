@@ -1,0 +1,114 @@
+{block name="main-content"}
+<div class="general-block-decorator">
+
+<div id="wrapper" class="container">
+<h2>Les statuts existants</h2>
+<div class="table-responsive">
+    <table class="table table-striped table-condensed table-left-aligned">
+        <thead>
+        <tr>
+            <th class="object-title">
+                {intl l='Id'}
+            </th>
+            <th class="object-title">
+                {intl l='Code'}
+            </th>
+            <th class="object-title">
+                {intl l='Title'}
+            </th>
+            <th class="object-title">
+                {intl l='Description'}
+            </th>
+        </tr>
+        </thead>
+        {loop type="product_status" name="product_status"}
+        <tbody>
+        <tr>
+            <td>
+                <b>{$ID}</b>
+            </td>
+            <td>
+                <p id="edited-code" contentEditable="true">
+                        {$CODE}
+                    {capture name="editedcode"}
+                    {/capture}
+                </p>
+            </td>
+            <td>
+                <a id="edited-title" contentEditable="true" class="label" style="background-color: {$COLOR};">{$TITLE}</a>
+            </td>
+            <td>
+                <p id="edited-description" contentEditable="true">{$DESCRIPTION}</p>
+            </td>
+
+            <td class="actions">
+                {$buttons = [
+                ]}
+                {if !$DELETABLE|default:null}
+                    {$buttons[] = [
+                    'type' => 'delete',
+                    'title' => {intl l='Delete this status' d='productstatus'},
+                    'href' => {url path="/admin/module/ProductStatus/delete/%id" id=$ID},
+                    'data' => [
+                    'id' => $ID,
+                    ]]}
+                {/if}
+                {include file='renderer/buttons.html' buttons=$buttons}
+            </td>
+        </tr>
+        {/loop}
+        </tbody>
+    </table>
+<hr>
+<div class="col-md-12"></div>
+<h2>Ajouter un statut</h2>
+    <br>
+<div>
+    {form name="productstatus_content" locale=$edit_language_locale}
+    {if $form_error}
+        <div class="alert alert-danger">{$form_error_message}</div>
+    {/if}
+    <form method="POST" action="{url path="/admin/module/ProductStatus/save"}" class="clearfix">
+
+
+        <input type="hidden" name="edited-code" value="{$smarty.capture.editedcode}">
+{*        <input type="hidden" name="edited-code" value={edited-code.value}>*}
+{*        <input type="hidden" name="edited-description" value={edited-description.value}>*}
+
+        {form_hidden_fields form=$form}
+
+
+        <div class="col-md-2">
+        {render_form_field field="status-name"}
+    </div>
+        <div class="col-md-2">
+            {render_form_field field="status-code"}
+        </div>
+    <div class="col-md-5">
+        {render_form_field field="info-text"}
+    </div>
+        <div class="col-md-3">
+            {custom_render_form_field field="color"}
+                <div class="input-group">
+                    <label>
+                        <input type="color" class="form-control" style="width: 100px;" {form_field_attributes field="color"}>
+                    </label>
+                </div>
+            {/custom_render_form_field}
+        </div>
+
+        {include
+        file="includes/inner-form-toolbar.html"
+        hide_submit_buttons = false
+        hide_flags = true
+
+        close_url={url path="/admin/modules"}
+        }
+    </form>
+    {/form}
+
+</div>
+</div>
+</div>
+</div>
+{/block}

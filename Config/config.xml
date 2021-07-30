@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config xmlns="http://thelia.net/schema/dic/config"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+
+    <loops>
+        <loop name="product_status" class="ProductStatus\Loop\ProductStatusLoop" />
+        <loop name="product_product_status" class="ProductStatus\Loop\ProductProductStatusLoop" />
+
+    </loops>
+
+    <forms>
+        <form name="productstatus_content" class="ProductStatus\Form\StatusContentForm" />
+    </forms>
+
+    <commands>
+        <!--
+        <command class="ProductStatus\Command\MySuperCommand" />
+        -->
+    </commands>
+
+    <!--
+    <services>
+
+    </services>
+    -->
+
+    <hooks>
+        <hook id="productstatus.hook">
+            <tag name="hook.event_listener" event="module.configuration" type="back" templates="render:module-configuration.html" />
+            <tag name="hook.event_listener" event="product.tab-content" type="back" templates="render:module.html" />
+
+        </hook>
+    </hooks>
+
+
+    <!--
+    <exports>
+
+    </exports>
+    -->
+
+    <!--
+    <imports>
+
+    </imports>
+    -->
+</config>

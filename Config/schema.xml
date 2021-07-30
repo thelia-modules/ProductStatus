@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database defaultIdMethod="native" name="thelia" namespace="ProductStatus\Model">
+    <!--
+    See propel documentation on http://propelorm.org for all information about schema file
+    -->
+
+    <table name="product_status" namespace="ProductStatus\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER" />
+        <column defaultValue="0" name="protected" required="true" type="TINYINT" />
+        <column name="color" size="7" type="CHAR" />
+        <column name="code" size="255" type="VARCHAR" />
+        <column name="title" size="255" type="VARCHAR" />
+        <column name="description" type="CLOB" />
+        <column name="chapo" type="LONGVARCHAR" />
+        <column name="postscriptum" type="LONGVARCHAR" />
+        <behavior name="timestampable" />
+        <behavior name="i18n">
+            <parameter name="i18n_columns" value="title, description, chapo, postscriptum" />
+        </behavior>
+    </table>
+
+    <table name="product_product_status" namespace="ProductStatus\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER" />
+        <column name="product_id" foreignKey="true" required="true" type="INTEGER" />
+        <column name="product_status_id" foreignKey="true" required="true" type="INTEGER" />
+        <foreign-key foreignTable="product_status" name="fk_product_status" onDelete="CASCADE" onUpdate="RESTRICT">
+            <reference foreign="id" local="product_status_id" />
+        </foreign-key>
+        <foreign-key foreignTable="product" name="fk_product" onDelete="CASCADE" onUpdate="RESTRICT">
+            <reference foreign="id" local="product_id" />
+        </foreign-key>
+        <behavior name="timestampable" />
+    </table>
+
+    <external-schema filename="local/config/schema.xml" referenceOnly="true" />
+
+</database>
