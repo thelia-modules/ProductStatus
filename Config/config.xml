@@ -12,6 +12,7 @@
 
     <forms>
         <form name="productstatus_content" class="ProductStatus\Form\StatusContentForm" />
+        <form name="productstatus_edit" class="ProductStatus\Form\StatusModificationForm" />
     </forms>
 
     <commands>

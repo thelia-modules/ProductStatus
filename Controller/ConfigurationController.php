@@ -3,6 +3,7 @@
 
 namespace ProductStatus\Controller;
 
+use ProductStatus\Form\StatusModificationForm;
 use ProductStatus\Model\ProductStatusQuery;
 use ProductStatus\ProductStatus;
 use ProductStatus\Form\StatusContentForm;
@@ -88,5 +89,33 @@ class ConfigurationController extends BaseAdminController
 
     return $this->generateRedirect(URL::getInstance()->absoluteUrl($url,
         $errorMsg ? ['errorMsg' => $errorMsg] : null));
+    }
+
+    public function edit()
+    {
+        $errorMsg = null;
+        $url = '/admin/module/ProductStatus';
+        $form = $this->createForm(StatusContentForm::getName());
+        $validForm = $this->validateForm($form);
+
+        try{ $productId = $this->getRequest()->attributes->get('id');
+
+            $statusToEdit = ProductStatusQuery::create()
+                ->findOneById($productId);
+
+            $statusToEdit
+                ->setLocale($this->getSession()->getAdminEditionLang()->getLocale())
+                ->setTitle($validForm->get('status-name')->getData())
+                ->setCode($validForm->get('status-code')->getData())
+                ->setColor($validForm->get('color')->getData())
+                ->setDescription($validForm->get('info-text')->getData())
+                ->save();
+
+        } catch (\Exception $e) {
+            $errorMsg = $e->getMessage();
+        }
+
+        return $this->generateRedirect(URL::getInstance()->absoluteUrl($url,
+            $errorMsg ? ['errorMsg' => $errorMsg] : null));
     }
 }

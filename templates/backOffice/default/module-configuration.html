@@ -21,37 +21,47 @@
             </th>
         </tr>
         </thead>
-        {loop type="product_status" name="product_status"}
+        {loop type="product_status" name="product_status" lang=$edit_language_id backend_context="1"}
         <tbody>
         <tr>
             <td>
-                <b>{$ID}</b>
+                <b id="id">
+                    {$ID}
+                </b>
             </td>
             <td>
-                <p id="edited-code" contentEditable="true">
-                        {$CODE}
-                    {capture name="editedcode"}
-                    {/capture}
+                <p id="code">
+                    {$CODE}
                 </p>
             </td>
             <td>
-                <a id="edited-title" contentEditable="true" class="label" style="background-color: {$COLOR};">{$TITLE}</a>
+                <a id="title" class="label" style="background-color: {$COLOR};">{$TITLE}</a>
             </td>
             <td>
-                <p id="edited-description" contentEditable="true">{$DESCRIPTION}</p>
+                <p id="description">{$DESCRIPTION}</p>
             </td>
-
             <td class="actions">
                 {$buttons = [
-                ]}
+                [
+                'type' => 'edit',
+                'class' => 'action-btn',
+                'title' => {intl l='Edit status' d='productstatus'},
+                'href' => {url path="/admin/module/ProductStatus/%id#edit_dialog_$ID" id=$ID},
+
+                'data' => [
+                    'id' => $ID ,
+                    'toggle' => 'modal'
+                ]
+                ]]}
                 {if !$DELETABLE|default:null}
-                    {$buttons[] = [
-                    'type' => 'delete',
-                    'title' => {intl l='Delete this status' d='productstatus'},
-                    'href' => {url path="/admin/module/ProductStatus/delete/%id" id=$ID},
-                    'data' => [
-                    'id' => $ID,
-                    ]]}
+                {$buttons[] = [
+                'type' => 'delete',
+                'title' => {intl l='Delete this status' d='productstatus'},
+                'href' => {url path="/admin/module/ProductStatus/delete/%id" id=$ID},
+                'data' => [
+                    'id' => $ID
+                ]
+                ]}
                 {/if}
                 {include file='renderer/buttons.html' buttons=$buttons}
             </td>
@@ -64,19 +74,14 @@
 <h2>Ajouter un statut</h2>
     <br>
 <div>
+
     {form name="productstatus_content" locale=$edit_language_locale}
     {if $form_error}
         <div class="alert alert-danger">{$form_error_message}</div>
     {/if}
     <form method="POST" action="{url path="/admin/module/ProductStatus/save"}" class="clearfix">
 
-
-        <input type="hidden" name="edited-code" value="{$smarty.capture.editedcode}">
-{*        <input type="hidden" name="edited-code" value={edited-code.value}>*}
-{*        <input type="hidden" name="edited-description" value={edited-description.value}>*}
-
         {form_hidden_fields form=$form}
-
 
         <div class="col-md-2">
         {render_form_field field="status-name"}
@@ -111,4 +116,19 @@
 </div>
 </div>
 </div>
+    {loop type="product_status" name="product_status" lang=$edit_language_id backend_context="1"}
+    {form name="productstatus_content" locale=$edit_language_locale}
+    {include
+    file = "includes/generic-create-dialog.html"
+
+    dialog_id    = "edit_dialog_$ID"
+    dialog_title = {intl l="Edit this status" d='productstatus'}
+    dialog_body = {include file= "module-status-edit.html"}
+    dialog_ok_label = {intl l="Edit this status" d='productstatus'}
+
+    form_action = {url path="/admin/module/ProductStatus/edit/%id" id=$ID}
+
+}
+{/form}
+{/loop}
 {/block}

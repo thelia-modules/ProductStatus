@@ -67,7 +67,6 @@ class ProductProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopI
                     break;
             }
         }
-//        dump($search->find());
         return $search;
     }
 
@@ -87,7 +86,6 @@ class ProductProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopI
             $loopResult->addRow($loopResultRow);
 
         }
-//        dump($loopResult);
 
         return $loopResult;
     }

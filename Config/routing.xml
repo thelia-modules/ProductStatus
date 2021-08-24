@@ -8,8 +8,13 @@
         <default key="_controller">ProductStatus\Controller\ConfigurationController::saveChanges</default>
     </route>
 
-    <route id="productstatus.dalete" path="/admin/module/ProductStatus/delete/{id}">
+    <route id="productstatus.delete" path="/admin/module/ProductStatus/delete/{id}">
         <default key="_controller">ProductStatus\Controller\ConfigurationController::delete</default>
+        <requirement key="id">[0-9A-Z]+</requirement>
+    </route>
+
+    <route id="productstatus.edit" path="/admin/module/ProductStatus/edit/{id}">
+        <default key="_controller">ProductStatus\Controller\ConfigurationController::edit</default>
         <requirement key="id">[0-9A-Z]+</requirement>
     </route>
 
