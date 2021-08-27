@@ -25,20 +25,20 @@
         <tbody>
         <tr>
             <td>
-                <b id="id">
+                <a id="id">
                     {$ID}
-                </b>
+                </a>
             </td>
             <td>
-                <p id="code">
+                <a id="code">
                     {$CODE}
-                </p>
+                </a>
             </td>
             <td>
-                <a id="title" class="label" style="background-color: {$COLOR};">{$TITLE}</a>
+                <a id="title" class="label" style="background-color: {$COLOR};" href="#">{$TITLE}</a>
             </td>
             <td>
-                <p id="description">{$DESCRIPTION}</p>
+                {$DESCRIPTION}
             </td>
             <td class="actions">
                 {$buttons = [
@@ -46,23 +46,23 @@
                 'type' => 'edit',
                 'class' => 'action-btn',
                 'title' => {intl l='Edit status' d='productstatus'},
-                'href' => {url path="/admin/module/ProductStatus/%id#edit_dialog_$ID" id=$ID},
+                'href' => {url path="/admin/module/ProductStatus#edit_dialog_$ID"},
 
                 'data' => [
                     'id' => $ID ,
                     'toggle' => 'modal'
                 ]
                 ]]}
-                {if !$DELETABLE|default:null}
+
                 {$buttons[] = [
                 'type' => 'delete',
                 'title' => {intl l='Delete this status' d='productstatus'},
-                'href' => {url path="/admin/module/ProductStatus/delete/%id" id=$ID},
+                'href' => {url path="/admin/module/ProductStatus#cancel_status_dialog_$ID"},
                 'data' => [
-                    'id' => $ID
+                    'id' => $ID ,
+                    'toggle' => 'modal'
                 ]
                 ]}
-                {/if}
                 {include file='renderer/buttons.html' buttons=$buttons}
             </td>
         </tr>
@@ -116,8 +116,12 @@
 </div>
 </div>
 </div>
+
+
+
     {loop type="product_status" name="product_status" lang=$edit_language_id backend_context="1"}
     {form name="productstatus_content" locale=$edit_language_locale}
+
     {include
     file = "includes/generic-create-dialog.html"
 
@@ -128,7 +132,28 @@
 
     form_action = {url path="/admin/module/ProductStatus/edit/%id" id=$ID}
 
-}
+    }
+
+
+
 {/form}
+
+    {* Cancel order confirmation dialog *}
+
+    {include
+    file = "includes/generic-confirm-dialog.html"
+
+    dialog_id       = "cancel_status_dialog_$ID"
+    dialog_title    = {intl l="Delete a status" d='productstatus'}
+    dialog_message  = {intl l="Do you really want to delete this flag ?" d='productstatus'}
+
+    form_action         = {token_url path="/admin/module/ProductStatus/delete/%id" id=$ID}
+    form_id             = "productstatus_content"
+
+    }
+
 {/loop}
+
+
+
 {/block}

@@ -18,4 +18,13 @@
         <requirement key="id">[0-9A-Z]+</requirement>
     </route>
 
+    <route id="productstatus.edit_product_status" path="/admin/module/ProductStatus/product={product_id}/edit_status">
+        <default key="_controller">ProductStatus\Controller\ConfigurationController::editProductStatus</default>
+        <requirement key="product_id">[0-9A-Z]+</requirement>
+    </route>
+
+    <route id="productstatus.list" path="/admin/module/ProductStatus/list">
+        <default key="_controller">ProductStatus\Controller\ConfigurationController::list</default>
+    </route>
+
 </routes>

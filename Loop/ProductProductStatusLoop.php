@@ -23,6 +23,7 @@ class ProductProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopI
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('id'),
             Argument::createIntListTypeArgument('product_status_id'),
+            Argument::createIntListTypeArgument('product_id'),
             Argument::createEnumListTypeArgument(
                 'order',
                 [
@@ -41,10 +42,13 @@ class ProductProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopI
         /* manage translations */
         $this->configureI18nProcessing($search);
 
-        $productId = $this->getCurrentRequest()->query->get('product_id');
+        $currentProductId =
+            $this->getCurrentRequest()->query->get('product_id') ?
+            : $this->getArgumentCollection()->get('product_id')->getValue()
+        ;
 
         $search->useProductProductStatusQuery()
-            ->filterByProductId($productId)
+            ->filterByProductId($currentProductId)
             ->endUse();
 
         if (null !== $id = $this->getId()) {
@@ -72,7 +76,7 @@ class ProductProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopI
 
     public function parseResults(LoopResult $loopResult): LoopResult
     {
-        /** @var ProductStatus $productStatus */
+        /** @var ProductProductStatus $productStatus */
         foreach ($loopResult->getResultDataCollection() as $productStatus) {
             $loopResultRow = new LoopResultRow($productStatus);
 

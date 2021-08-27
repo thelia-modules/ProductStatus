@@ -3,11 +3,14 @@
 
 namespace ProductStatus\Controller;
 
-use ProductStatus\Form\StatusModificationForm;
+use ProductStatus\Form\EditProductStatusForm;
+use ProductStatus\Model\ProductProductStatus;
+use ProductStatus\Model\ProductProductStatusQuery;
 use ProductStatus\Model\ProductStatusQuery;
 use ProductStatus\ProductStatus;
 use ProductStatus\Form\StatusContentForm;
 use Thelia\Controller\Admin\BaseAdminController;
+use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Core\Translation\Translator;
@@ -109,6 +112,39 @@ class ConfigurationController extends BaseAdminController
                 ->setCode($validForm->get('status-code')->getData())
                 ->setColor($validForm->get('color')->getData())
                 ->setDescription($validForm->get('info-text')->getData())
+                ->save();
+
+        } catch (\Exception $e) {
+            $errorMsg = $e->getMessage();
+        }
+
+        return $this->generateRedirect(URL::getInstance()->absoluteUrl($url,
+            $errorMsg ? ['errorMsg' => $errorMsg] : null));
+    }
+
+    public function editProductStatus(Request $request)
+    {
+        $errorMsg = null;
+        $url = '/admin/products/';
+        $form = $this->createForm(EditProductStatusForm::getName());
+        $validForm = $this->validateForm($form);
+
+        try{ $productId = $this->getRequest()->attributes->get('product_id');
+
+            if ('stay' == $request->get('save_mode')) {
+                $url= "/admin/products/update?product_id=$productId&current_tab=modules";
+            }
+
+            $statusToEdit = ProductProductStatusQuery::create()
+                ->findOneByProductId($productId);
+
+            if(!$statusToEdit) {
+                $newEntryIfThereIsNone = new ProductProductStatus();
+               $statusToEdit = $newEntryIfThereIsNone->setProductId($productId);
+            }
+
+            $statusToEdit
+                ->setProductStatusId($validForm->get('product_status_id')->getData())
                 ->save();
 
         } catch (\Exception $e) {

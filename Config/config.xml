@@ -7,12 +7,11 @@
     <loops>
         <loop name="product_status" class="ProductStatus\Loop\ProductStatusLoop" />
         <loop name="product_product_status" class="ProductStatus\Loop\ProductProductStatusLoop" />
-
     </loops>
 
     <forms>
         <form name="productstatus_content" class="ProductStatus\Form\StatusContentForm" />
-        <form name="productstatus_edit" class="ProductStatus\Form\StatusModificationForm" />
+        <form name="edit_product_status" class="ProductStatus\Form\EditProductStatusForm" />
     </forms>
 
     <commands>
@@ -30,8 +29,6 @@
     <hooks>
         <hook id="productstatus.hook">
             <tag name="hook.event_listener" event="module.configuration" type="back" templates="render:module-configuration.html" />
-            <tag name="hook.event_listener" event="product.tab-content" type="back" templates="render:module.html" />
-
         </hook>
     </hooks>
 
