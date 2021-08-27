@@ -125,15 +125,12 @@ class ConfigurationController extends BaseAdminController
     public function editProductStatus(Request $request)
     {
         $errorMsg = null;
-        $url = '/admin/products/';
         $form = $this->createForm(EditProductStatusForm::getName());
         $validForm = $this->validateForm($form);
 
         try{ $productId = $this->getRequest()->attributes->get('product_id');
 
-            if ('stay' == $request->get('save_mode')) {
-                $url= "/admin/products/update?product_id=$productId&current_tab=modules";
-            }
+            $url = "/admin/products/update?product_id=$productId&current_tab=modules";
 
             $statusToEdit = ProductProductStatusQuery::create()
                 ->findOneByProductId($productId);

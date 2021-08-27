@@ -60,7 +60,7 @@
                             </td>
                             <td class="actions">
                                 {custom_render_form_field field="product_status_id"}
-                                    <select {form_field_attributes form=$form field="product_status_id"} >
+                                    <select onchange="this.form.submit()" {form_field_attributes form=$form field="product_status_id"} >
                                         {loop type="product_status" name="product_status"}
                                             <option {if $ID == $tmp}selected{/if} value="{$ID}">
                                                 {$TITLE}
@@ -73,13 +73,6 @@
                     </tbody>
             </table>
         </div>
-        {include
-        file="includes/inner-form-toolbar.html"
-        hide_submit_buttons = false
-        hide_flags = true
-
-        close_url={url path="/admin/products"}
-        }
     </form>
     {/form}
 {/block}
