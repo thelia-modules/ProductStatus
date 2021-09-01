@@ -4,12 +4,13 @@
     <title>PRODUCT STATUS</title>
 </head>
 {block name="main-content"}
-    <h2>Product Status</h2>
+    <p class="title title-without-tabs">
+        Product Status
+    </p>
+
     {if $errorMsg}
         <div class="alert alert-danger">{$errorMsg}</div>
     {/if}
-
-    <hr>
 
 {form name="edit_product_status" locale=$edit_language_locale}
 <form method="POST" action="{url path="/admin/module/ProductStatus/product=%product_id/edit_status" product_id=$id}" class="clearfix">
@@ -21,7 +22,7 @@
                     <thead>
                     <tr>
                         <th class="object-title">
-                            {intl l='Id'}
+                            {intl l='#'}
                         </th>
                         <th class="object-title">
                             {intl l='Title'}

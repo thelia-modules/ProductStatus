@@ -29,7 +29,7 @@
     <hooks>
         <hook id="productstatus.hook">
             <tag name="hook.event_listener" event="module.configuration" type="back" templates="render:module-configuration.html" />
-        </hook>
+            <tag name="hook.event_listener" event="product.tab-content" type="back" templates="render:module.html" />        </hook>
     </hooks>
 
 

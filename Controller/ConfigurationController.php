@@ -18,16 +18,6 @@ use Thelia\Tools\URL;
 
 class ConfigurationController extends BaseAdminController
 {
-    public function showModule()
-    {
-        return $this->render('module-configuration', ['module_code' => ProductStatus::DOMAIN_NAME]);
-    }
-
-    public function configPage()
-    {
-        return $this->render('module', ['module_code' => ProductStatus::DOMAIN_NAME]);
-    }
-
     public function saveChanges()
     {
         if (null !== $response = $this->checkAuth(AdminResources::MODULE, ProductStatus::DOMAIN_NAME, AccessManager::UPDATE)) {
