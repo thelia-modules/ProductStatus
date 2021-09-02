@@ -1,0 +1,28 @@
+{loop type="product_product_status" name="product_product_status"}
+    {if $STATUS_ID !== 1 and !empty($STATUS_TITLE)}
+        <p id="status-banner" style="border-style: solid; border-color: #dbbf7c;">
+            {$STATUS_TITLE}
+        </p>
+        <div class="mt-3"></div>
+        {if $STATUS_DESCRIPTION}
+            <i>
+                {$STATUS_TITLE} : {$STATUS_DESCRIPTION}
+            </i>
+        {/if}
+    {/if}
+
+    {if $STATUS_ID >= 2 and $STATUS_ID <= 4}
+        <script>
+            document.getElementById("btn-restocking-alert").remove()
+        </script>
+    {/if}
+{/loop}
+
+{*  moving status title on the top of the card  *}
+<script>
+    banner = document.getElementById("status-banner")
+    card = document.getElementById('product-details')
+    if (banner) {
+        card.prepend(banner)
+    }
+</script>

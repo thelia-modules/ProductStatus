@@ -41,10 +41,10 @@ class ConfigurationController extends BaseAdminController
 
             $productStatus
                 ->setLocale($this->getSession()->getAdminEditionLang()->getLocale())
-                ->setTitle($validForm->get('status-name')->getData())
-                ->setCode($validForm->get('status-code')->getData())
+                ->setTitle(ucfirst($validForm->get('status-name')->getData()))
+                ->setCode(lcfirst($validForm->get('status-code')->getData()))
                 ->setColor($validForm->get('color')->getData())
-                ->setDescription($validForm->get('info-text')->getData())
+                ->setDescription(lcfirst($validForm->get('info-text')->getData()))
                 ->save();
 
         } catch (\Exception $e) {
@@ -94,10 +94,10 @@ class ConfigurationController extends BaseAdminController
 
             $statusToEdit
                 ->setLocale($this->getSession()->getAdminEditionLang()->getLocale())
-                ->setTitle($validForm->get('status-name')->getData())
-                ->setCode($validForm->get('status-code')->getData())
+                ->setTitle(ucfirst($validForm->get('status-name')->getData()))
+                ->setCode(lcfirst($validForm->get('status-code')->getData()))
                 ->setColor($validForm->get('color')->getData())
-                ->setDescription($validForm->get('info-text')->getData())
+                ->setDescription(lcfirst($validForm->get('info-text')->getData()))
                 ->save();
 
         } catch (\Exception $e) {

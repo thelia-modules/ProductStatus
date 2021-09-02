@@ -53,10 +53,10 @@
                             </td>
                             <td>
                                 {loop type="product_product_status" name="product_product_status"}
-                                    <a class="label" href="{url path="admin/module/ProductStatus"}" style="background-color: {if !empty({$COLOR})}{$COLOR}{else}#387038{/if};">
-                                        {if !empty($STATUS_TITLE)}{$STATUS_TITLE}{else}normal{/if}
+                                    <a class="label" href="{url path="admin/module/ProductStatus"}" style="background-color: {$STATUS_COLOR};">
+                                        {$STATUS_TITLE}
                                     </a>
-                                {$tmp=$ID}
+                                {$tmp=$STATUS_ID}
                                 {/loop}
                             </td>
                             <td class="actions">

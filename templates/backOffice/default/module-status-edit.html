@@ -9,20 +9,20 @@
         <div class="col-md-4">
             {custom_render_form_field field="status-name"}
                 <div class="input-group">
-                        <label>
-                            <input type="text" value="{$TITLE}" {form_field_attributes field="status-name"}>
-                        </label>
-                    </div>
+                    <label>
+                        <input type="text" value="{$TITLE}" {form_field_attributes field="status-name"}>
+                    </label>
+                </div>
             {/custom_render_form_field}
         </div>
         <div class="col-md-4">
         {custom_render_form_field field="status-code"}
-                <div class="input-group">
-                    <label>
-                        <input type="text" value="{$CODE}" {form_field_attributes field="status-code"}>
-                    </label>
-                </div>
-            {/custom_render_form_field}
+            <div class="input-group">
+                <label>
+                    <input {if $PROTECTED}readonly onfocus="this.blur()"{/if} type="text" value="{$CODE}" {form_field_attributes field="status-code"}>
+                </label>
+            </div>
+        {/custom_render_form_field}
         </div>
         <div class="col-md-4" >
             {custom_render_form_field field="color"}

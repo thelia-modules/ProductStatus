@@ -42,7 +42,7 @@ class StatusContentForm extends BaseForm
             'info-text',
             'textarea',
             [
-                'required' => true,
+                'required' => false,
                 'label' => $translator->trans('The status description', [], ProductStatus::DOMAIN_NAME),
                 'label_attr' => ['for' => 'info-text'],
                 ]

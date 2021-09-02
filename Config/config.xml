@@ -29,7 +29,9 @@
     <hooks>
         <hook id="productstatus.hook">
             <tag name="hook.event_listener" event="module.configuration" type="back" templates="render:module-configuration.html" />
-            <tag name="hook.event_listener" event="product.tab-content" type="back" templates="render:module.html" />        </hook>
+            <tag name="hook.event_listener" event="product.tab-content" type="back" templates="render:module.html" />
+            <tag name="hook.event_listener" event="product.bottom" type="front" templates="render:module-banner.html" />
+        </hook>
     </hooks>
 
 
