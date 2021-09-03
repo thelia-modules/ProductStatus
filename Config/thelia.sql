@@ -56,15 +56,6 @@ CREATE TABLE `product_product_status`
             ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-SET NAMES utf8mb4;
-
-INSERT INTO `product_product_status` (`id`, `product_id`, `product_status_id`, `created_at`, `updated_at`) VALUES
-(1,	13,	4,	'2021-07-29 09:50:51',	'2021-07-29 09:50:51'),
-(2,	12,	1,	NULL,	NULL),
-(3,	6,	2,	NULL,	NULL),
-(4,	1,	1,	NULL,	NULL),
-(5,	21,	3,	NULL,	NULL);
-
 -- ---------------------------------------------------------------------
 -- product_status_i18n
 -- ---------------------------------------------------------------------

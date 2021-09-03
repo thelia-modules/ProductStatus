@@ -39,6 +39,16 @@ class ConfigurationController extends BaseAdminController
             $validForm = $this->validateForm($form);
             $productStatus = new \ProductStatus\Model\ProductStatus();
 
+            $code = lcfirst($validForm->get('status-code')->getData());
+
+            if (ProductStatusQuery::create()->findOneByCode($code)) {
+                $errorMsg = ProductStatus::CODE_EXIST_MESSAGE;
+                $this->getSession()->getFlashBag()->add('status-exist-error', $errorMsg);
+
+                return $this->generateRedirect(URL::getInstance()->absoluteUrl($url,
+                    ['errorMsg' => $errorMsg]));
+            }
+
             $productStatus
                 ->setLocale($this->getSession()->getAdminEditionLang()->getLocale())
                 ->setTitle(ucfirst($validForm->get('status-name')->getData()))

@@ -1,124 +1,132 @@
 {block name="main-content"}
 <div class="general-block-decorator">
 
-<div id="wrapper" class="container">
-<h2>Les statuts existants</h2>
-<div class="table-responsive">
-    <table class="table table-striped table-condensed table-left-aligned">
-        <thead>
-        <tr>
-            <th class="object-title">
-                {intl l='Id'}
-            </th>
-            <th class="object-title">
-                {intl l='Code'}
-            </th>
-            <th class="object-title">
-                {intl l='Title'}
-            </th>
-            <th class="object-title">
-                {intl l='Description'}
-            </th>
-        </tr>
-        </thead>
-        {loop type="product_status" name="product_status" lang=$edit_language_id backend_context="1"}
-        <tbody>
-        <tr>
-            <td>
-                <a id="id">
-                    {$ID}
-                </a>
-            </td>
-            <td>
-                <a id="code">
-                    {$CODE}
-                </a>
-            </td>
-            <td>
-                <a id="title" class="label" style="background-color: {$COLOR};" href="#">{$TITLE}</a>
-            </td>
-            <td>
-                {$DESCRIPTION}
-            </td>
-            <td class="actions">
-                {$buttons = [
-                [
-                'type' => 'edit',
-                'class' => 'action-btn',
-                'title' => {intl l='Edit status' d='productstatus'},
-                'href' => {url path="/admin/module/ProductStatus#edit_dialog_$ID"},
+    <div id="wrapper" class="container">
+    <h2 class="title">{intl l="Existing status" d="productstatus"}</h2>
+        <br>
+        <div class="table-responsive">
+            <table class="table table-striped table-condensed table-left-aligned">
+                <thead>
+                <tr>
+                    <th class="object-title">
+                        {intl l='Id'}
+                    </th>
+                    <th class="object-title">
+                        {intl l='Code'}
+                    </th>
+                    <th class="object-title">
+                        {intl l='Title'}
+                    </th>
+                    <th class="object-title">
+                        {intl l='Description'}
+                    </th>
+                </tr>
+                </thead>
+                {loop type="product_status" name="product_status" lang=$edit_language_id backend_context="1"}
+                <tbody>
+                <tr>
+                    <td>
+                        <a id="id">
+                            {$ID}
+                        </a>
+                    </td>
+                    <td>
+                        <a id="code">
+                            {$CODE}
+                        </a>
+                    </td>
+                    <td>
+                        <a id="title" class="label" style="background-color: {$COLOR};" href="#">{$TITLE}</a>
+                    </td>
+                    <td>
+                        {$DESCRIPTION}
+                    </td>
+                    <td class="actions">
+                        {$buttons = [
+                        [
+                        'type' => 'edit',
+                        'class' => 'action-btn',
+                        'title' => {intl l='Edit status' d='productstatus'},
+                        'href' => {url path="/admin/module/ProductStatus#edit_dialog_$ID"},
 
-                'data' => [
-                    'id' => $ID ,
-                    'toggle' => 'modal'
-                ]
-                ]]}
-                {if !$PROTECTED}
-                {$buttons[] = [
-                'type' => 'delete',
-                'title' => {intl l='Delete this status' d='productstatus'},
-                'href' => {url path="/admin/module/ProductStatus#cancel_status_dialog_$ID"},
-                'data' => [
-                    'id' => $ID ,
-                    'toggle' => 'modal'
-                ]
-                ]}
-                {/if}
-                {include file='renderer/buttons.html' buttons=$buttons}
-            </td>
-        </tr>
-        {/loop}
-        </tbody>
-    </table>
-<hr>
-<div class="col-md-12"></div>
-<h2>Ajouter un statut</h2>
-    <br>
-<div>
-
-    {form name="productstatus_content" locale=$edit_language_locale}
-    {if $form_error}
-        <div class="alert alert-danger">{$form_error_message}</div>
-    {/if}
-    <form method="POST" action="{url path="/admin/module/ProductStatus/save"}" class="clearfix">
-
-        {form_hidden_fields form=$form}
-
-        <div class="col-md-2">
-        {render_form_field field="status-name"}
-    </div>
-        <div class="col-md-2">
-            {render_form_field field="status-code"}
+                        'data' => [
+                            'id' => $ID ,
+                            'toggle' => 'modal'
+                        ]
+                        ]]}
+                        {if !$PROTECTED}
+                        {$buttons[] = [
+                        'type' => 'delete',
+                        'title' => {intl l='Delete this status' d='productstatus'},
+                        'href' => {url path="/admin/module/ProductStatus#cancel_status_dialog_$ID"},
+                        'data' => [
+                            'id' => $ID ,
+                            'toggle' => 'modal'
+                        ]
+                        ]}
+                        {/if}
+                        {include file='renderer/buttons.html' buttons=$buttons}
+                    </td>
+                </tr>
+                {/loop}
+                </tbody>
+            </table>
         </div>
-    <div class="col-md-5">
-        {render_form_field field="info-text"}
-    </div>
-        <div class="col-md-3">
-            {custom_render_form_field field="color"}
-                <div class="input-group">
-                    <label>
-                        <input type="color" class="form-control" style="width: 100px;" {form_field_attributes field="color"}>
-                    </label>
+
+        <div>
+            {flash type="status-exist-error"}
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class=" alert alert-danger">
+                            {intl l={$MESSAGE} d='productstatus'}
+                        </div>
+                    </div>
                 </div>
-            {/custom_render_form_field}
+            {/flash}
+
+            <hr>
+            <h2 class="title">{intl l="Add a status" d="productstatus"}</h2>
+            <br>
+
+            {form name="productstatus_content" locale=$edit_language_locale}
+            {if $form_error}
+                <div class="alert alert-danger">{$form_error_message}</div>
+            {/if}
+            <form method="POST" action="{url path="/admin/module/ProductStatus/save"}"  class="form-group">
+
+                {form_hidden_fields form=$form}
+
+                <div class="col-md-3">
+                    {render_form_field field="status-name"}
+                </div>
+                <div class="col-md-3">
+                    {render_form_field field="status-code"}
+                </div>
+                <div class="col-md-4">
+                    {render_form_field field="info-text"}
+                </div>
+                <div class="col-md-2" style="height: 13rem">
+                    {custom_render_form_field field="color"}
+                        <div class="input-group">
+                            <label>
+                                <input type="color" class="form-control" style="width: 100px;" {form_field_attributes field="color"}>
+                            </label>
+                        </div>
+                    {/custom_render_form_field}
+                </div>
+
+                {include
+                file="includes/inner-form-toolbar.html"
+                hide_submit_buttons = false
+                hide_flags = true
+
+                close_url={url path="/admin/modules"}
+                }
+            </form>
+            {/form}
         </div>
-
-        {include
-        file="includes/inner-form-toolbar.html"
-        hide_submit_buttons = false
-        hide_flags = true
-
-        close_url={url path="/admin/modules"}
-        }
-    </form>
-    {/form}
-
+    </div>
 </div>
-</div>
-</div>
-</div>
-
-
 
     {loop type="product_status" name="product_status" lang=$edit_language_id backend_context="1"}
     {form name="productstatus_content" locale=$edit_language_locale}
@@ -127,9 +135,9 @@
     file = "includes/generic-create-dialog.html"
 
     dialog_id    = "edit_dialog_$ID"
-    dialog_title = {intl l="Edit this status" d='productstatus'}
+    dialog_title = {intl l="Edit status" d='productstatus'}
     dialog_body = {include file= "module-status-edit.html"}
-    dialog_ok_label = {intl l="Edit this status" d='productstatus'}
+    dialog_ok_label = {intl l="Edit status" d='productstatus'}
 
     form_action = {url path="/admin/module/ProductStatus/edit/%id" id=$ID}
 
@@ -145,8 +153,8 @@
     file = "includes/generic-confirm-dialog.html"
 
     dialog_id       = "cancel_status_dialog_$ID"
-    dialog_title    = {intl l="Delete a status" d='productstatus'}
-    dialog_message  = {intl l="Do you really want to delete this flag ?" d='productstatus'}
+    dialog_title    = {intl l="Delete this status" d='productstatus'}
+    dialog_message  = {intl l="Do you really want to delete this status ?" d='productstatus'}
 
     form_action         = {token_url path="/admin/module/ProductStatus/delete/%id" id=$ID}
     form_id             = "productstatus_content"

@@ -1,4 +1,5 @@
 <?php
 return array(
-    // 'an english string' => 'The displayed english string',
+    "This code already exists, please pick another one" => "This code already exists, please pick another one",
+    "product status" => "product status"
 );

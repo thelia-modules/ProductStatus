@@ -4,7 +4,7 @@
     <title>PRODUCT STATUS</title>
 </head>
 {block name="main-content"}
-    <p class="title title-without-tabs">
+    <p id="refresh_anchor" class="title title-without-tabs">
         Product Status
     </p>
 
@@ -19,59 +19,62 @@
 
         <div class="table-responsive">
             <table class="table table-striped table-condensed table-left-aligned">
-                    <thead>
+                <thead>
+                <tr>
+                    <th class="object-title">
+                        {intl l='#'}
+                    </th>
+                    <th class="object-title">
+                        {intl l='Title'}
+                    </th>
+                    <th class="object-title">
+                        {intl l='Price'}
+                    </th>
+                    <th class="object-title">
+                        {intl l='Status'}
+                    </th>
+                    <th class="object-title">
+                        {intl l='Edit Status'}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
                     <tr>
-                        <th class="object-title">
-                            {intl l='#'}
-                        </th>
-                        <th class="object-title">
-                            {intl l='Title'}
-                        </th>
-                        <th class="object-title">
-                            {intl l='Price'}
-                        </th>
-                        <th class="object-title">
-                            {intl l='Status'}
-                        </th>
-                        <th class="object-title">
-                            {intl l='Edit Status'}
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                {$id}
-                            </td>
-                            <td>
-                                <a href="{url path="admin/products/update?product_id=%id" id=$id}">
-                                    {$TITLE}
-                                </a>
-                            </td>
-                            <td>
-                                {$PRICE|number_format:0} €
-                            </td>
-                            <td>
-                                {loop type="product_product_status" name="product_product_status"}
-                                    <a class="label" href="{url path="admin/module/ProductStatus"}" style="background-color: {$STATUS_COLOR};">
-                                        {$STATUS_TITLE}
-                                    </a>
+                        <td>
+                            {$id}
+                        </td>
+                        <td>
+                            <a href="{url path="admin/products/update?product_id=%id" id=$id}">
+                                {$TITLE}
+                            </a>
+                        </td>
+                        <td>
+                            {$PRICE|number_format:0} €
+                        </td>
+                        <td>
+                            {loop type="product_product_status" name="product_product_status"}
                                 {$tmp=$STATUS_ID}
-                                {/loop}
-                            </td>
-                            <td class="actions">
-                                {custom_render_form_field field="product_status_id"}
-                                    <select onchange="this.form.submit()" {form_field_attributes form=$form field="product_status_id"} >
-                                        {loop type="product_status" name="product_status"}
-                                            <option {if $ID == $tmp}selected{/if} value="{$ID}">
-                                                {$TITLE}
-                                            </option>
-                                        {/loop}
-                                    </select>
-                                {/custom_render_form_field}
-                            </td>
-                        </tr>
-                    </tbody>
+                                {* I don't know why i have to do this *}
+                                {$current_color=$STATUS_COLOR}
+                                {$current_status=$STATUS_TITLE}
+                            {/loop}
+                            <a class="label" href="{url path="admin/module/ProductStatus"}" style="background-color: {$current_color|default:"#7cd582"};">
+                                {$current_status|default:'Normal'}
+                            </a>
+                        </td>
+                        <td class="actions">
+                            {custom_render_form_field field="product_status_id"}
+                                <select onchange="this.form.submit()" {form_field_attributes form=$form field="product_status_id"} >
+                                    {loop type="product_status" name="product_status"}
+                                        <option {if $ID == $tmp}selected{/if} value="{$ID}">
+                                            {$TITLE}
+                                        </option>
+                                    {/loop}
+                                </select>
+                            {/custom_render_form_field}
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </form>

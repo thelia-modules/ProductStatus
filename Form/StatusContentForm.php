@@ -19,24 +19,28 @@ class StatusContentForm extends BaseForm
         $translator = Translator::getInstance();
         $this->formBuilder
             ->add(
-                'status-name',
-                'text',
-                [
-                    'required' => true,
-                    'label' => $translator->trans('The status name', [], ProductStatus::DOMAIN_NAME),
-                    'label_attr' => ['for' => 'status-name'],
-                ]
-            )
+            'status-name',
+            'text',
+            [
+                'required' => true,
+                'label' => $translator->trans('The status name', [], ProductStatus::DOMAIN_NAME),
+                'label_attr' => [
+                    'help' => Translator::getInstance()->trans('Title of the status. Will be displayed in frontOffice', [], ProductStatus::DOMAIN_NAME),
+                ],
+            ]
+        )
 
             ->add(
-                'status-code',
-                'text',
-                [
-                    'required' => true,
-                    'label' => $translator->trans('The status code', [], ProductStatus::DOMAIN_NAME),
-                    'label_attr' => ['for' => 'status-code'],
-                ]
-            )
+            'status-code',
+            'text',
+            [
+                'required' => true,
+                'label' => $translator->trans('The status code', [], ProductStatus::DOMAIN_NAME),
+                'label_attr' => [
+                    'help' => Translator::getInstance()->trans('It must be unique', [], ProductStatus::DOMAIN_NAME),
+                ],
+            ]
+        )
 
             ->add(
             'info-text',
@@ -44,25 +48,26 @@ class StatusContentForm extends BaseForm
             [
                 'required' => false,
                 'label' => $translator->trans('The status description', [], ProductStatus::DOMAIN_NAME),
-                'label_attr' => ['for' => 'info-text'],
-                ]
-            )
+                'label_attr' => [
+                    'help' => Translator::getInstance()->trans('The text displayed in frontOffice', [], ProductStatus::DOMAIN_NAME),
+                ],
+            ]
+        )
 
             ->add(
-                'color',
-                'text',
-                [
-                    'required' => true,
-                    'label' => Translator::getInstance()->trans('Status color', [], ProductStatus::DOMAIN_NAME),
-                    'label_attr' => [
-                        'for' => 'title',
-                        'help' => Translator::getInstance()->trans('Choose a color', [], ProductStatus::DOMAIN_NAME),
-                    ],
-                    'attr' => [
-                        'placeholder' => '#dbbf7c',
-                    ],
-                ]
-            );
+            'color',
+            'text',
+            [
+                'required' => true,
+                'label' => Translator::getInstance()->trans('Status color', [], ProductStatus::DOMAIN_NAME),
+                'label_attr' => [
+                    'help' => Translator::getInstance()->trans('Choose a color', [], ProductStatus::DOMAIN_NAME),
+                ],
+                'attr' => [
+                    'placeholder' => '#dbbf7c',
+                ],
+            ]
+        );
     }
 
     public function getName() : string
