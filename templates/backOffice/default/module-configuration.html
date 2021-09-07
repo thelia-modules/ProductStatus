@@ -84,6 +84,10 @@
                 </div>
             {/flash}
 
+            {if $errorMessage}
+                <div class="alert alert-danger">{$errorMessage}</div>
+            {/if}
+
             <hr>
             <h2 class="title">{intl l="Add a status" d="productstatus"}</h2>
             <br>
@@ -97,10 +101,10 @@
                 {form_hidden_fields form=$form}
 
                 <div class="col-md-3">
-                    {render_form_field field="status-name"}
+                    {render_form_field field="status-code"}
                 </div>
                 <div class="col-md-3">
-                    {render_form_field field="status-code"}
+                    {render_form_field field="status-name"}
                 </div>
                 <div class="col-md-4">
                     {render_form_field field="info-text"}

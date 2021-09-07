@@ -5,7 +5,7 @@
 </head>
 {block name="main-content"}
     <p id="refresh_anchor" class="title title-without-tabs">
-        Product Status
+        {intl l="product status" d="productstatus"}
     </p>
 
     {if $errorMsg}
@@ -25,16 +25,16 @@
                         {intl l='#'}
                     </th>
                     <th class="object-title">
-                        {intl l='Title'}
+                        {intl l='Title' d="productstatus"}
                     </th>
                     <th class="object-title">
-                        {intl l='Price'}
+                        {intl l='Price' d="productstatus"}
                     </th>
                     <th class="object-title">
-                        {intl l='Status'}
+                        {intl l='Status' d="productstatus"}
                     </th>
                     <th class="object-title">
-                        {intl l='Edit Status'}
+                        {intl l='Edit status' d="productstatus"}
                     </th>
                 </tr>
                 </thead>
