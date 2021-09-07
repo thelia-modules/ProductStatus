@@ -18,6 +18,28 @@ use Thelia\Tools\URL;
 
 class ConfigurationController extends BaseAdminController
 {
+    public function retrieve($object, $alternateQuery = null)
+    {
+        $retrievedObject = null;
+        $query = ProductStatusQuery::create();
+
+        if (is_string($object))
+        {
+           $retrievedObject = $query->findOneByCode($object);
+        }
+        if (is_int($object))
+        {
+           $retrievedObject = $query->findOneById($object);
+        }
+        if ($alternateQuery = true)
+        {
+            $query = ProductProductStatusQuery::create();
+            $retrievedObject = $query->findOneById($object);
+        }
+
+        return $retrievedObject;
+    }
+
     public function saveChanges()
     {
         if (null !== $response = $this->checkAuth(AdminResources::MODULE, ProductStatus::DOMAIN_NAME, AccessManager::UPDATE)) {
@@ -41,7 +63,7 @@ class ConfigurationController extends BaseAdminController
 
             $code = lcfirst($validForm->get('status-code')->getData());
 
-            if (ProductStatusQuery::create()->findOneByCode($code)) {
+            if ($this->retrieve($code)) {
                 $errorMsg = ProductStatus::CODE_EXIST_MESSAGE;
                 $this->getSession()->getFlashBag()->add('status-exist-error', $errorMsg);
 
@@ -77,8 +99,7 @@ class ConfigurationController extends BaseAdminController
 
       try{ $productId = $this->getRequest()->attributes->get('id');
 
-        $statusToDelete = ProductStatusQuery::create()
-            ->findOneById($productId);
+        $statusToDelete = $this->retrieve($productId);
 
         $statusToDelete->delete();
 
@@ -99,8 +120,7 @@ class ConfigurationController extends BaseAdminController
 
         try{ $productId = $this->getRequest()->attributes->get('id');
 
-            $statusToEdit = ProductStatusQuery::create()
-                ->findOneById($productId);
+            $statusToEdit = $this->retrieve($productId);
 
             $statusToEdit
                 ->setLocale($this->getSession()->getAdminEditionLang()->getLocale())
@@ -126,10 +146,9 @@ class ConfigurationController extends BaseAdminController
 
         try{ $productId = $this->getRequest()->attributes->get('product_id');
 
-            $url = "/admin/products/update?product_id=$productId&current_tab=modules";
+            $url = "/admin/products/update?product_id=$productId&current_tab=modules#refresh_anchor";
 
-            $statusToEdit = ProductProductStatusQuery::create()
-                ->findOneByProductId($productId);
+            $statusToEdit = $this->retrieve($productId, true);
 
             if(!$statusToEdit) {
                 $newEntryIfThereIsNone = new ProductProductStatus();
