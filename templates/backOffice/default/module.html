@@ -28,7 +28,7 @@
                         {intl l='Title' d="productstatus"}
                     </th>
                     <th class="object-title">
-                        {intl l='Price' d="productstatus"}
+                        {intl l='Reference' d="productstatus"}
                     </th>
                     <th class="object-title">
                         {intl l='Status' d="productstatus"}
@@ -49,7 +49,7 @@
                             </a>
                         </td>
                         <td>
-                            {$PRICE|number_format:0} €
+                            {$REF}
                         </td>
                         <td>
                             {loop type="product_product_status" name="product_product_status"}

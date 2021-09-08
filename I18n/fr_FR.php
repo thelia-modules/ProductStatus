@@ -4,6 +4,7 @@ return array(
     "product status" => "statut du produit",
     "Title" => "Titre",
     "Price" => "Prix",
+    "Reference" => "Référence",
     "Status" => "Statut",
     "Edit Status" => "Editer le Statut",
     "Existing status" => "Les statuts existants",
