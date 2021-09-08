@@ -1,28 +1,29 @@
 {loop type="product_product_status" name="product_product_status"}
-{if $STATUS_ID !== 1 and !empty($STATUS_TITLE)}
-    <p id="status-banner" style="border-style: solid; border-color: #dbbf7c;">
-        {$STATUS_TITLE|upper}
-    </p>
-    <div class="mt-3"></div>
-    {if $STATUS_DESCRIPTION}
-        <i>
-            {$STATUS_TITLE} : {$STATUS_DESCRIPTION}
-        </i>
+    {if $STATUS_ID !== 1 and !empty($STATUS_TITLE)}
+        <p id="status-banner" style="border-style: solid; border-color: #dbbf7c;">
+            {$STATUS_TITLE|upper}
+        </p>
+        <div class="mt-3">
+            {if $STATUS_DESCRIPTION}
+                <i>
+                    {$STATUS_TITLE} : {$STATUS_DESCRIPTION}
+                </i>
+            {/if}
+        </div>
     {/if}
-{/if}
 
-{if $STATUS_ID >= 2 and $STATUS_ID <= 4}
-    <script>
-        document.getElementById("btn-restocking-alert").remove()
-    </script>
-{/if}
+    {if $STATUS_ID >= 2 and $STATUS_ID <= 4}
+        <script>
+            document.getElementById("btn-restocking-alert").remove()
+        </script>
+    {/if}
 {/loop}
 
-{*  moving status title on the top of the card  *}
+{*  moving status title on the top of the card (no hook) *}
 <script>
     banner = document.getElementById("status-banner")
-    card = document.getElementById('product-details')
-    discount = document.querySelector('div.Product-discount')
+    card = document.getElementById("product-details")
+    discount = document.querySelector("div.Product-discount")
     if (banner) {
         card.prepend(banner)
 
