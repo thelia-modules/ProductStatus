@@ -6,7 +6,7 @@ return array(
     "Price" => "Prix",
     "Status" => "Statut",
     "Edit Status" => "Editer le Statut",
-    "Existing status" => "Les statuts éxistants",
+    "Existing status" => "Les statuts existants",
     "Add a status" => "ajouter un statut",
     "The status name" => "Nom",
     "The status code" => "Code",
@@ -15,7 +15,7 @@ return array(
     "Choose a color" => "Associez une couleur au statut",
     'Title of the status. Will be displayed in frontOffice' => "Titre du status. Il sera visible sur la boutique",
     'It must be unique' => "Doit être unique",
-    'The text displayed in frontOffice' => "Description du statut, facultatif. Elle sera Visible sur la boutique",
+    'The text displayed in frontOffice' => "Description du statut, facultatif. Elle sera visible sur la boutique",
     "Delete this status" => "Supprimer ce statut",
     "Do you really want to delete this status ?" => "Etes-vous sûr de vouloir supprimer ce statut ?"
 );
