@@ -28,13 +28,6 @@ class ConfigurationController extends BaseAdminController
         $form = $this->createForm(StatusContentForm::getName());
         $errorMessage = null;
 
-        if (null !== $response = $this->checkAuth(
-                [AdminResources::MODULE],
-                [ProductStatus::DOMAIN_NAME],
-                AccessManager::UPDATE)) {
-            return $response;
-        }
-
         try {
             $validForm = $this->validateForm($form);
             $productStatus = new \ProductStatus\Model\ProductStatus();
