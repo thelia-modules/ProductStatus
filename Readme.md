@@ -19,7 +19,7 @@ composer require thelia/product-status-module:~1.0
 
 ## Usage
 
-Explain here how to use your module, how to configure it, etc.
+You can create status in module/configuration and associate it in each modules tab's product. The status will show a decription and a code on the product page in front-office
 
 ## Hook
 hook `module.configuration` is used for configuration page
