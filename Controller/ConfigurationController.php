@@ -28,13 +28,6 @@ class ConfigurationController extends BaseAdminController
         $form = $this->createForm(StatusContentForm::getName());
         $errorMessage = null;
 
-        if (null !== $response = $this->checkAuth(
-                [AdminResources::MODULE],
-                [ProductStatus::DOMAIN_NAME],
-                AccessManager::UPDATE)) {
-            return $response;
-        }
-
         try {
             $validForm = $this->validateForm($form);
             $productStatus = new \ProductStatus\Model\ProductStatus();
@@ -51,7 +44,7 @@ class ConfigurationController extends BaseAdminController
             $productStatus
                 ->setLocale($this->getSession()->getAdminEditionLang()->getLocale())
                 ->setTitle(ucfirst($validForm->get('status-name')->getData()))
-                ->setCode($code)
+                ->setCode(mb_strtolower($validForm->get('status-code')->getData()))
                 ->setColor($validForm->get('color')->getData())
                 ->setDescription(lcfirst($validForm->get('info-text')->getData()))
                 ->save();
@@ -129,6 +122,7 @@ class ConfigurationController extends BaseAdminController
 
             if(!$statusToEdit) {
                 $newEntry = new ProductProductStatus();
+
                 $statusToEdit = $newEntry->setProductId($productId);
             }
 

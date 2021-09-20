@@ -55,8 +55,13 @@
                             {loop type="product_product_status" name="product_product_status"}
                                 {$tmp=$STATUS_ID}
                                 {* I don't know why i have to do this *}
+<<<<<<< HEAD
                                 {$current_status=$STATUS_TITLE}
                                 {$current_color=$STATUS_COLOR}
+=======
+                                {$current_color=$STATUS_COLOR}
+                                {$current_status=$STATUS_TITLE}
+>>>>>>> 549edc0adc4cdc37647604670c4b471d60151e2d
                             {/loop}
                             <a class="label" href="{url path="admin/module/ProductStatus"}" style="background-color: {$current_color|default:"#7cd582"};">
                                 {$current_status|default:'Normal'}

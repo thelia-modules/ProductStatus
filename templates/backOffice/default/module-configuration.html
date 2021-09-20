@@ -96,6 +96,7 @@
             {if $form_error}
                 <div class="alert alert-danger">{$form_error_message}</div>
             {/if}
+
             <form method="POST" action="{url path="/admin/module/ProductStatus/save"}" class="form-group">
 
                 {form_hidden_fields form=$form}
