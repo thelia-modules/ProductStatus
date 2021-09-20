@@ -14,7 +14,7 @@ Add a short description here. You can also add a screenshot if needed.
 Add it in your main thelia composer.json file
 
 ```
-composer require your-vendor/product-status-module:~1.0
+composer require thelia/product-status-module:~1.0
 ```
 
 ## Usage
@@ -22,34 +22,50 @@ composer require your-vendor/product-status-module:~1.0
 Explain here how to use your module, how to configure it, etc.
 
 ## Hook
+hook `module.configuration` is used for configuration page
 
-If your module use one or more hook, fill this part. Explain which hooks are used.
+hook `product.tab-content` is used to display module in the modules tab of each product
 
-
+hook `product.bottom` is used to dislay status content un frontOffice
 ## Loop
 
 If your module declare one or more loop, describe them here like this :
 
-[loop name]
-
-### Input arguments
-
-|Argument |Description |
-|---      |--- |
-|**arg1** | describe arg1 with an exemple. |
-|**arg2** | describe arg2 with an exemple. |
-
-### Output arguments
+[ProductProductStatusLoop]
 
 |Variable   |Description |
 |---        |--- |
-|$VAR1    | describe $VAR1 variable |
-|$VAR2    | describe $VAR2 variable |
+|$LOCALE    | language variable |
+|$STATUS_ID    | the status id of the current product |
+|$STATUS_COLOR | the status color of th current product|
+|$STATUS_DESCRIPTION|the status description of the current product|
+|$STATUS_TITLE| the status name of the current product|
+
+[ProductStatusLoop]
+
+|Variable   |Description |
+|---        |--- |
+|$LOCALE    | language variable |
+|$ID    | the id of the status |
+|$COLOR | the color of the status|
+|$DESCRIPTION|the description status|
+|$TITLE| the name of the status|
+|$CODE| the code of the status|
+|$UPDATED_AT| the last updated time of the status|
+|$CREATED_AT| the created time of the status|
 
 ### Exemple
 
-Add a complete exemple of your loop
+    {if $STATUS_ID !== 1 and !empty($STATUS_TITLE)}
+        <p id="status-banner" style="border-style: solid; border-color: #dbbf7c;">
+            {$STATUS_TITLE|upper}
+        </p>
+        <div class="mt-3">
+            {if $STATUS_DESCRIPTION}
+                <i>
+                    {$STATUS_TITLE} : {$STATUS_DESCRIPTION}
+                </i>
+            {/if}
+        </div>
+    {/if}
 
-## Other ?
-
-If you have other think to put, feel free to complete your readme as you want.
