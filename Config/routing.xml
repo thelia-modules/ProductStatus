@@ -5,16 +5,16 @@
         xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="productstatus.save" path="/admin/module/ProductStatus/save">
-        <default key="_controller">ProductStatus\Controller\ConfigurationController::saveChanges</default>
+        <default key="_controller">ProductStatus\Controller\ConfigurationController::createStatus</default>
     </route>
 
     <route id="productstatus.delete" path="/admin/module/ProductStatus/delete/{id}">
-        <default key="_controller">ProductStatus\Controller\ConfigurationController::delete</default>
+        <default key="_controller">ProductStatus\Controller\ConfigurationController::deleteStatus</default>
         <requirement key="id">[0-9A-Z]+</requirement>
     </route>
 
     <route id="productstatus.edit" path="/admin/module/ProductStatus/edit/{id}">
-        <default key="_controller">ProductStatus\Controller\ConfigurationController::edit</default>
+        <default key="_controller">ProductStatus\Controller\ConfigurationController::editStatus</default>
         <requirement key="id">[0-9A-Z]+</requirement>
     </route>
 
@@ -22,9 +22,4 @@
         <default key="_controller">ProductStatus\Controller\ConfigurationController::editProductStatus</default>
         <requirement key="product_id">[0-9A-Z]+</requirement>
     </route>
-
-    <route id="productstatus.list" path="/admin/module/ProductStatus/list">
-        <default key="_controller">ProductStatus\Controller\ConfigurationController::list</default>
-    </route>
-
 </routes>

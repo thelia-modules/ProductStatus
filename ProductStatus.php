@@ -20,6 +20,7 @@ class ProductStatus extends BaseModule
 {
     /** @var string */
     const DOMAIN_NAME = 'productstatus';
+    const CODE_EXIST_MESSAGE = 'This code already exists, please pick another one';
 
     public function preActivation(ConnectionInterface $con = null) : bool
     {

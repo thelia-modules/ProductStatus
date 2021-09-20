@@ -23,10 +23,10 @@ CREATE TABLE `product_status`
 SET NAMES utf8mb4;
 
 INSERT INTO `product_status` (`id`, `protected`, `color`, `code`, `created_at`, `updated_at`) VALUES
-(1,	0,	'#6dd073',	'normal',	'2021-07-28 16:57:12',	'2021-07-28 16:57:12'),
-(2,	0,	'#d9534f',	'discontinued',	'2021-07-28 16:57:12',	'2021-07-28 16:57:12'),
-(3,	0,	'#986dff',	'sale',	'2021-07-28 16:57:12',	'2021-07-28 16:57:12'),
-(4,	0,	'#2c75ff',	'oddment',	NULL,	NULL);
+(1,	1,	'#6dd073',	'normal',	'2021-07-28 16:57:12',	'2021-07-28 16:57:12'),
+(2,	1,	'#d9534f',	'discontinued',	'2021-07-28 16:57:12',	'2021-07-28 16:57:12'),
+(3,	1,	'#986dff',	'sale',	'2021-07-28 16:57:12',	'2021-07-28 16:57:12'),
+(4,	1,	'#2c75ff',	'oddment',	NULL,	NULL);
 
 -- ---------------------------------------------------------------------
 -- product_product_status
@@ -55,15 +55,6 @@ CREATE TABLE `product_product_status`
             ON UPDATE RESTRICT
             ON DELETE CASCADE
 ) ENGINE=InnoDB;
-
-SET NAMES utf8mb4;
-
-INSERT INTO `product_product_status` (`id`, `product_id`, `product_status_id`, `created_at`, `updated_at`) VALUES
-(1,	13,	4,	'2021-07-29 09:50:51',	'2021-07-29 09:50:51'),
-(2,	12,	1,	NULL,	NULL),
-(3,	6,	2,	NULL,	NULL),
-(4,	1,	1,	NULL,	NULL),
-(5,	21,	3,	NULL,	NULL);
 
 -- ---------------------------------------------------------------------
 -- product_status_i18n

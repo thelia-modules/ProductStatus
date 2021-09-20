@@ -1,5 +1,9 @@
 <div class="row">
 
+    {if $errorMessage}
+        <div class="alert alert-danger">{$errorMessage}</div>
+    {/if}
+
     {if $form_error}
         <div class="alert alert-danger">{$form_error_message}</div>
     {/if}

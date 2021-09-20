@@ -79,7 +79,7 @@ class ProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopInterfac
                     ->set('CODE', $productStatus->getCode())
                     ->set('COLOR', $productStatus->getColor())
                     ->set('DESCRIPTION', $productStatus->getVirtualColumn('i18n_DESCRIPTION'))
-                    ->set('PROTECTED_STATUS', $productStatus->getProtected())
+                    ->set('PROTECTED', $productStatus->getProtected())
                     ->set('CREATED_AT', $productStatus->getCreatedAt())
                     ->set('UPDATED_AT', $productStatus->getUpdatedAt())
                     ->set('TITLE', $productStatus->getVirtualColumn('i18n_TITLE'));

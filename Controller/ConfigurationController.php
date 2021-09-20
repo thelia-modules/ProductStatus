@@ -10,7 +10,6 @@ use ProductStatus\Model\ProductStatusQuery;
 use ProductStatus\ProductStatus;
 use ProductStatus\Form\StatusContentForm;
 use Thelia\Controller\Admin\BaseAdminController;
-use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Core\Translation\Translator;
@@ -18,25 +17,16 @@ use Thelia\Tools\URL;
 
 class ConfigurationController extends BaseAdminController
 {
-    public function showModule()
-    {
-        return $this->render('module-configuration', ['module_code' => ProductStatus::DOMAIN_NAME]);
-    }
+    const URL = '/admin/module/ProductStatus';
 
-    public function configPage()
-    {
-        return $this->render('module', ['module_code' => ProductStatus::DOMAIN_NAME]);
-    }
-
-    public function saveChanges()
+    public function createStatus()
     {
         if (null !== $response = $this->checkAuth(AdminResources::MODULE, ProductStatus::DOMAIN_NAME, AccessManager::UPDATE)) {
             return $response;
         }
 
-        $url = '/admin/module/ProductStatus';
         $form = $this->createForm(StatusContentForm::getName());
-        $errorMsg = null;
+        $errorMessage = null;
 
         if (null !== $response = $this->checkAuth(
                 [AdminResources::MODULE],
@@ -48,52 +38,58 @@ class ConfigurationController extends BaseAdminController
         try {
             $validForm = $this->validateForm($form);
             $productStatus = new \ProductStatus\Model\ProductStatus();
+            $code = mb_strtolower($validForm->get('status-code')->getData());
+
+            if (ProductStatusQuery::create()->findOneByCode($code)) {
+                $errorMessage = ProductStatus::CODE_EXIST_MESSAGE;
+                $this->getSession()->getFlashBag()->add('status-exist-error', $errorMessage);
+
+                return $this->generateRedirect(URL::getInstance()->absoluteUrl(self::URL,
+                    ['errorMessage' => $errorMessage]));
+            }
 
             $productStatus
                 ->setLocale($this->getSession()->getAdminEditionLang()->getLocale())
-                ->setTitle($validForm->get('status-name')->getData())
-                ->setCode($validForm->get('status-code')->getData())
+                ->setTitle(ucfirst($validForm->get('status-name')->getData()))
+                ->setCode($code)
                 ->setColor($validForm->get('color')->getData())
-                ->setDescription($validForm->get('info-text')->getData())
+                ->setDescription(lcfirst($validForm->get('info-text')->getData()))
                 ->save();
 
         } catch (\Exception $e) {
             $this->setupFormErrorContext(
                 Translator::getInstance()->trans('status created'),
-                $errorMsg = $e->getMessage(),
+                $errorMessage = $e->getMessage(),
                 $form,
                 $e
             );
         }
 
-        return $this->generateRedirect(URL::getInstance()->absoluteUrl($url,
-            $errorMsg ? ['errorMsg' => $errorMsg] : null));
+        return $this->generateRedirect(URL::getInstance()->absoluteUrl(self::URL,
+            $errorMessage ? ['errorMessage' => $errorMessage] : null));
     }
 
-    public function delete()
+    public function deleteStatus()
     {
-        $errorMsg = null;
-        $url = '/admin/module/ProductStatus';
+        $errorMessage = null;
 
-      try{ $productId = $this->getRequest()->attributes->get('id');
+        try{ $productId = $this->getRequest()->attributes->get('id');
 
-        $statusToDelete = ProductStatusQuery::create()
-            ->findOneById($productId);
+            ProductStatusQuery::create()
+                ->findOneById($productId)
+                ->delete();
 
-        $statusToDelete->delete();
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+        }
 
-      } catch (\Exception $e) {
-              $errorMsg = $e->getMessage();
-      }
-
-    return $this->generateRedirect(URL::getInstance()->absoluteUrl($url,
-        $errorMsg ? ['errorMsg' => $errorMsg] : null));
+        return $this->generateRedirect(URL::getInstance()->absoluteUrl(self::URL,
+            $errorMessage ? ['errorMessage' => $errorMessage] : null));
     }
 
-    public function edit()
+    public function editStatus()
     {
-        $errorMsg = null;
-        $url = '/admin/module/ProductStatus';
+        $errorMessage = null;
         $form = $this->createForm(StatusContentForm::getName());
         $validForm = $this->validateForm($form);
 
@@ -104,36 +100,36 @@ class ConfigurationController extends BaseAdminController
 
             $statusToEdit
                 ->setLocale($this->getSession()->getAdminEditionLang()->getLocale())
-                ->setTitle($validForm->get('status-name')->getData())
-                ->setCode($validForm->get('status-code')->getData())
+                ->setTitle(ucfirst($validForm->get('status-name')->getData()))
+                ->setCode(mb_strtolower($validForm->get('status-code')->getData()))
                 ->setColor($validForm->get('color')->getData())
-                ->setDescription($validForm->get('info-text')->getData())
+                ->setDescription(lcfirst($validForm->get('info-text')->getData()))
                 ->save();
 
         } catch (\Exception $e) {
-            $errorMsg = $e->getMessage();
+            $errorMessage = $e->getMessage();
         }
 
-        return $this->generateRedirect(URL::getInstance()->absoluteUrl($url,
-            $errorMsg ? ['errorMsg' => $errorMsg] : null));
+        return $this->generateRedirect(URL::getInstance()->absoluteUrl(self::URL,
+            $errorMessage ? ['errorMessage' => $errorMessage] : null));
     }
 
-    public function editProductStatus(Request $request)
+    public function editProductStatus()
     {
-        $errorMsg = null;
+        $errorMessage = null;
         $form = $this->createForm(EditProductStatusForm::getName());
         $validForm = $this->validateForm($form);
 
         try{ $productId = $this->getRequest()->attributes->get('product_id');
 
-            $url = "/admin/products/update?product_id=$productId&current_tab=modules";
+            $url = "/admin/products/update?product_id=$productId&current_tab=modules#refresh_anchor";
 
             $statusToEdit = ProductProductStatusQuery::create()
                 ->findOneByProductId($productId);
 
             if(!$statusToEdit) {
-                $newEntryIfThereIsNone = new ProductProductStatus();
-               $statusToEdit = $newEntryIfThereIsNone->setProductId($productId);
+                $newEntry = new ProductProductStatus();
+                $statusToEdit = $newEntry->setProductId($productId);
             }
 
             $statusToEdit
@@ -141,10 +137,10 @@ class ConfigurationController extends BaseAdminController
                 ->save();
 
         } catch (\Exception $e) {
-            $errorMsg = $e->getMessage();
+            $errorMessage = $e->getMessage();
         }
 
         return $this->generateRedirect(URL::getInstance()->absoluteUrl($url,
-            $errorMsg ? ['errorMsg' => $errorMsg] : null));
+            $errorMessage ? ['errorMessage' => $errorMessage] : null));
     }
 }
