@@ -44,7 +44,7 @@ class ConfigurationController extends BaseAdminController
             $productStatus
                 ->setLocale($this->getSession()->getAdminEditionLang()->getLocale())
                 ->setTitle(ucfirst($validForm->get('status-name')->getData()))
-                ->setCode(mb_strtolower($validForm->get('status-code')->getData()))
+                ->setCode($code)
                 ->setColor($validForm->get('color')->getData())
                 ->setDescription(lcfirst($validForm->get('info-text')->getData()))
                 ->save();
