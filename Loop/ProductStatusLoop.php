@@ -22,6 +22,7 @@ class ProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopInterfac
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('id'),
             Argument::createAnyTypeArgument('code'),
+            Argument::createBooleanTypeArgument('protected'),
             Argument::createEnumListTypeArgument(
                 'order',
                 [
@@ -47,6 +48,10 @@ class ProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopInterfac
 
         if (null !== $code = $this->getCode()) {
             $search->filterByCode($code, Criteria::EQUAL);
+        }
+
+        if (null !== $protected = $this->getProtected()) {
+          $search->filterByProtected($protected, Criteria::EQUAL);
         }
 
         $orders = $this->getOrder();

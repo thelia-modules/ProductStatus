@@ -54,6 +54,15 @@ If your module declare one or more loop, describe them here like this :
 |$UPDATED_AT| the last updated time of the status|
 |$CREATED_AT| the created time of the status|
 
+### Input arguments
+
+|Argument |Description |
+|---      |--- |
+|id| filter by on one or more ID|
+|code | filter by code|
+|protected | display protected status if true, unprotected ones if false|
+|order | order the result  (alpha, alpha-reverse, random , given_id )|
+
 ### Exemple
 
     {if $STATUS_ID !== 1 and !empty($STATUS_TITLE)}
