@@ -96,7 +96,8 @@
             {if $form_error}
                 <div class="alert alert-danger">{$form_error_message}</div>
             {/if}
-            <form method="POST" action="{url path="/admin/module/ProductStatus/save"}"  class="form-group">
+
+            <form method="POST" action="{url path="/admin/module/ProductStatus/save"}" class="form-group">
 
                 {form_hidden_fields form=$form}
 
@@ -144,12 +145,8 @@
     dialog_ok_label = {intl l="Edit status" d='productstatus'}
 
     form_action = {url path="/admin/module/ProductStatus/edit/%id" id=$ID}
-
     }
-
-
-
-{/form}
+    {/form}
 
     {* Cancel order confirmation dialog *}
 
@@ -162,11 +159,8 @@
 
     form_action         = {token_url path="/admin/module/ProductStatus/delete/%id" id=$ID}
     form_id             = "productstatus_content"
-
     }
 
 {/loop}
-
-
 
 {/block}

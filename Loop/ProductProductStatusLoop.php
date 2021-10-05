@@ -85,7 +85,6 @@ class ProductProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopI
                 ->set('STATUS_COLOR', $productStatus->getColor())
                 ->set('STATUS_DESCRIPTION', $productStatus->getVirtualColumn('i18n_DESCRIPTION'))
                 ->set('STATUS_TITLE', $productStatus->getVirtualColumn('i18n_TITLE'));
-
             $this->addOutputFields($loopResultRow, $productStatus);
 
             $loopResult->addRow($loopResultRow);

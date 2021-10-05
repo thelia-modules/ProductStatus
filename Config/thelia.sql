@@ -23,10 +23,10 @@ CREATE TABLE `product_status`
 SET NAMES utf8mb4;
 
 INSERT INTO `product_status` (`id`, `protected`, `color`, `code`, `created_at`, `updated_at`) VALUES
-(1,	1,	'#6dd073',	'normal',	'2021-07-28 16:57:12',	'2021-07-28 16:57:12'),
-(2,	1,	'#d9534f',	'discontinued',	'2021-07-28 16:57:12',	'2021-07-28 16:57:12'),
-(3,	1,	'#986dff',	'sale',	'2021-07-28 16:57:12',	'2021-07-28 16:57:12'),
-(4,	1,	'#2c75ff',	'oddment',	NULL,	NULL);
+(1,	1,	'#6dd073',	'normal',	CURRENT_TIMESTAMP,	CURRENT_TIMESTAMP),
+(2,	1,	'#d9534f',	'discontinued',	CURRENT_TIMESTAMP,	CURRENT_TIMESTAMP),
+(3,	1,	'#986dff',	'sale',	CURRENT_TIMESTAMP,	CURRENT_TIMESTAMP),
+(4,	1,	'#2c75ff',	'oddment',	CURRENT_TIMESTAMP,	CURRENT_TIMESTAMP);
 
 -- ---------------------------------------------------------------------
 -- product_product_status

@@ -6,7 +6,7 @@ return array(
     "Price" => "Prix",
     "Reference" => "Référence",
     "Status" => "Statut",
-    "Edit Status" => "Editer le Statut",
+    "Edit status" => "Editer le Statut",
     "Existing status" => "Les statuts existants",
     "Add a status" => "ajouter un statut",
     "The status name" => "Nom",

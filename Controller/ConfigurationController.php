@@ -44,7 +44,7 @@ class ConfigurationController extends BaseAdminController
             $productStatus
                 ->setLocale($this->getSession()->getAdminEditionLang()->getLocale())
                 ->setTitle(ucfirst($validForm->get('status-name')->getData()))
-                ->setCode(mb_strtolower($validForm->get('status-code')->getData()))
+                ->setCode($code)
                 ->setColor($validForm->get('color')->getData())
                 ->setDescription(lcfirst($validForm->get('info-text')->getData()))
                 ->save();
@@ -76,8 +76,8 @@ class ConfigurationController extends BaseAdminController
             $errorMessage = $e->getMessage();
         }
 
-    return $this->generateRedirect(URL::getInstance()->absoluteUrl(self::URL,
-        $errorMessage ? ['errorMessage' => $errorMessage] : null));
+        return $this->generateRedirect(URL::getInstance()->absoluteUrl(self::URL,
+            $errorMessage ? ['errorMessage' => $errorMessage] : null));
     }
 
     public function editStatus()
@@ -122,7 +122,8 @@ class ConfigurationController extends BaseAdminController
 
             if(!$statusToEdit) {
                 $newEntry = new ProductProductStatus();
-               $statusToEdit = $newEntry->setProductId($productId);
+
+                $statusToEdit = $newEntry->setProductId($productId);
             }
 
             $statusToEdit

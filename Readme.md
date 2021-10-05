@@ -77,3 +77,16 @@ If your module declare one or more loop, describe them here like this :
             {/if}
         </div>
     {/if}
+
+    {if $STATUS_ID !== 1 and !empty($STATUS_TITLE)}
+        <p id="status-banner" style="border-style: solid; border-color: #dbbf7c;">
+            {$STATUS_TITLE|upper}
+        </p>
+        <div class="mt-3">
+            {if $STATUS_DESCRIPTION}
+                <i>
+                    {$STATUS_TITLE} : {$STATUS_DESCRIPTION}
+                </i>
+            {/if}
+        </div>
+    {/if}

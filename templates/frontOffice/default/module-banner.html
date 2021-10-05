@@ -19,11 +19,13 @@
     {/if}
 {/loop}
 
-{*  moving status title on the top of the card (no hook) *}
+
+{*  moving status title on the top of the card  *}
 <script>
     banner = document.getElementById("status-banner")
     card = document.getElementById("product-details")
     discount = document.querySelector("div.Product-discount")
+
     if (banner) {
         card.prepend(banner)
 

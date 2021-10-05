@@ -20,12 +20,6 @@
         -->
     </commands>
 
-    <!--
-    <services>
-
-    </services>
-    -->
-
     <hooks>
         <hook id="productstatus.hook">
             <tag name="hook.event_listener" event="module.configuration" type="back" templates="render:module-configuration.html" />
