@@ -1,5 +1,5 @@
 {
-  "name": "your-vendor/product-status-module",
+  "name": "thelia/product-status-module",
   "description": "ProductStatus module for Thelia",
   "license": "LGPL-3.0-or-later",
   "type": "thelia-module",
