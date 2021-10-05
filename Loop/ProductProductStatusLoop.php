@@ -23,7 +23,6 @@ class ProductProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopI
         return new ArgumentCollection(
             Argument::createIntListTypeArgument('id'),
             Argument::createIntListTypeArgument('product_status_id'),
-            Argument::createIntListTypeArgument('product_id'),
             Argument::createEnumListTypeArgument(
                 'order',
                 [
