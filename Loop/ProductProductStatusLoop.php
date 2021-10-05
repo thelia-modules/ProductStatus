@@ -3,9 +3,7 @@
 namespace ProductStatus\Loop;
 
 use ProductStatus\Model\ProductProductStatus;
-use ProductStatus\Model\ProductProductStatusQuery;
 use ProductStatus\Model\ProductStatusQuery;
-use ProductStatus\ProductStatus;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Thelia\Core\Template\Element\BaseI18nLoop;
 use Thelia\Core\Template\Element\LoopResult;
