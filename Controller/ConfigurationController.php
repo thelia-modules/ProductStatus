@@ -9,6 +9,7 @@ use ProductStatus\Model\ProductProductStatusQuery;
 use ProductStatus\Model\ProductStatusQuery;
 use ProductStatus\ProductStatus;
 use ProductStatus\Form\StatusContentForm;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
@@ -19,7 +20,7 @@ class ConfigurationController extends BaseAdminController
 {
     const URL = '/admin/module/ProductStatus';
 
-    public function createStatus()
+    public function createStatus(RequestStack $requestStack)
     {
         if (null !== $response = $this->checkAuth(AdminResources::MODULE, ProductStatus::DOMAIN_NAME, AccessManager::UPDATE)) {
             return $response;
@@ -33,16 +34,18 @@ class ConfigurationController extends BaseAdminController
             $productStatus = new \ProductStatus\Model\ProductStatus();
             $code = mb_strtolower($validForm->get('status-code')->getData());
 
+            $session = $requestStack->getSession();
+
             if (ProductStatusQuery::create()->findOneByCode($code)) {
                 $errorMessage = ProductStatus::CODE_EXIST_MESSAGE;
-                $this->getSession()->getFlashBag()->add('status-exist-error', $errorMessage);
+                $session->getFlashBag()->add('status-exist-error', $errorMessage);
 
                 return $this->generateRedirect(URL::getInstance()->absoluteUrl(self::URL,
                     ['errorMessage' => $errorMessage]));
             }
 
             $productStatus
-                ->setLocale($this->getSession()->getAdminEditionLang()->getLocale())
+                ->setLocale($session->getAdminEditionLang()->getLocale())
                 ->setTitle(ucfirst($validForm->get('status-name')->getData()))
                 ->setCode($code)
                 ->setColor($validForm->get('color')->getData())
@@ -62,11 +65,12 @@ class ConfigurationController extends BaseAdminController
             $errorMessage ? ['errorMessage' => $errorMessage] : null));
     }
 
-    public function deleteStatus()
+    public function deleteStatus(RequestStack $requestStack)
     {
         $errorMessage = null;
 
-        try{ $productId = $this->getRequest()->attributes->get('id');
+        try{
+            $productId = $requestStack->getCurrentRequest()->attributes->get('id');
 
             ProductStatusQuery::create()
                 ->findOneById($productId)
@@ -80,19 +84,20 @@ class ConfigurationController extends BaseAdminController
             $errorMessage ? ['errorMessage' => $errorMessage] : null));
     }
 
-    public function editStatus()
+    public function editStatus(RequestStack $requestStack)
     {
         $errorMessage = null;
         $form = $this->createForm(StatusContentForm::getName());
         $validForm = $this->validateForm($form);
 
-        try{ $productId = $this->getRequest()->attributes->get('id');
+        try{
+            $productId = $requestStack->getCurrentRequest()->attributes->get('id');
 
             $statusToEdit = ProductStatusQuery::create()
                 ->findOneById($productId);
 
             $statusToEdit
-                ->setLocale($this->getSession()->getAdminEditionLang()->getLocale())
+                ->setLocale($requestStack->getSession()->getAdminEditionLang()->getLocale())
                 ->setTitle(ucfirst($validForm->get('status-name')->getData()))
                 ->setCode(mb_strtolower($validForm->get('status-code')->getData()))
                 ->setColor($validForm->get('color')->getData())
@@ -107,13 +112,14 @@ class ConfigurationController extends BaseAdminController
             $errorMessage ? ['errorMessage' => $errorMessage] : null));
     }
 
-    public function editProductStatus()
+    public function editProductStatus(RequestStack $requestStack)
     {
         $errorMessage = null;
         $form = $this->createForm(EditProductStatusForm::getName());
         $validForm = $this->validateForm($form);
 
-        try{ $productId = $this->getRequest()->attributes->get('product_id');
+        try{
+            $productId = $requestStack->getCurrentRequest()->attributes->get('product_id');
 
             $url = "/admin/products/update?product_id=$productId&current_tab=modules#refresh_anchor";
 

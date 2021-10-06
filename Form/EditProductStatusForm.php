@@ -5,6 +5,7 @@ namespace ProductStatus\Form;
 
 use ProductStatus\Model\ProductStatusQuery;
 use ProductStatus\ProductStatus;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraint;
@@ -20,14 +21,14 @@ class EditProductStatusForm extends BaseForm
         $this->formBuilder
             ->add(
                 'product_status_id',
-                'integer',
+                IntegerType::class,
                 [
                     'required' => false,
                 ]
             );
     }
 
-    public function getName() : string
+    public static function getName() : string
     {
         return 'edit_product_status';
     }

@@ -8,7 +8,7 @@
         {intl l="product status" d="productstatus"}
     </p>
 
-    {if $errorMessage}
+    {if $errorMessage|default:null}
         <div class="alert alert-danger">{$errorMessage}</div>
     {/if}
 
@@ -68,7 +68,7 @@
                             {custom_render_form_field field="product_status_id"}
                                 <select onchange="this.form.submit()" {form_field_attributes form=$form field="product_status_id"} >
                                     {loop type="product_status" name="product_status"}
-                                        <option {if $ID == $tmp}selected{/if} value="{$ID}">
+                                        <option {if $ID == $tmp|default:null}selected{/if} value="{$ID}">
                                             {$TITLE}
                                         </option>
                                     {/loop}
