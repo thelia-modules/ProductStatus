@@ -20,7 +20,7 @@ class StatusContentForm extends BaseForm
         $this->formBuilder
             ->add(
             'status-name',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'label' => $translator->trans('The status name', [], ProductStatus::DOMAIN_NAME),
@@ -32,7 +32,7 @@ class StatusContentForm extends BaseForm
 
             ->add(
             'status-code',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'label' => $translator->trans('The status code', [], ProductStatus::DOMAIN_NAME),
@@ -44,7 +44,7 @@ class StatusContentForm extends BaseForm
 
             ->add(
             'info-text',
-            'textarea',
+            TextareaType::class,
             [
                 'required' => false,
                 'label' => $translator->trans('The status description', [], ProductStatus::DOMAIN_NAME),
@@ -56,7 +56,7 @@ class StatusContentForm extends BaseForm
 
             ->add(
             'color',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'label' => Translator::getInstance()->trans('Status color', [], ProductStatus::DOMAIN_NAME),
@@ -70,7 +70,7 @@ class StatusContentForm extends BaseForm
         );
     }
 
-    public function getName() : string
+    public static function getName() : string
     {
         return 'productstatus_content';
     }

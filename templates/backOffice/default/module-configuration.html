@@ -84,7 +84,7 @@
                 </div>
             {/flash}
 
-            {if $errorMessage}
+            {if $errorMessage|default:null}
                 <div class="alert alert-danger">{$errorMessage}</div>
             {/if}
 
@@ -143,6 +143,7 @@
     dialog_title = {intl l="Edit status" d='productstatus'}
     dialog_body = {include file= "module-status-edit.html"}
     dialog_ok_label = {intl l="Edit status" d='productstatus'}
+    form_enctype = null
 
     form_action = {url path="/admin/module/ProductStatus/edit/%id" id=$ID}
     }
@@ -156,6 +157,7 @@
     dialog_id       = "cancel_status_dialog_$ID"
     dialog_title    = {intl l="Delete this status" d='productstatus'}
     dialog_message  = {intl l="Do you really want to delete this status ?" d='productstatus'}
+    form_content = null
 
     form_action         = {token_url path="/admin/module/ProductStatus/delete/%id" id=$ID}
     form_id             = "productstatus_content"
