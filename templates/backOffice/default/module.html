@@ -54,13 +54,10 @@
                         <td>
                             {loop type="product_product_status" name="product_product_status"}
                                 {$tmp=$STATUS_ID}
-                                {* I don't know why i have to do this *}
-                           
                                 {$current_status=$STATUS_TITLE}
                                 {$current_color=$STATUS_COLOR}
-
                             {/loop}
-                            <a class="label" href="{url path="admin/module/ProductStatus"}" style="background-color: {$current_color|default:"#7cd582"};">
+                            <a id="product-status-label" class="label" href="{url path="admin/module/ProductStatus"}" style="background-color: {$current_color|default:"#7cd582"};">
                                 {$current_status|default:'Normal'}
                             </a>
                         </td>
@@ -83,4 +80,8 @@
     {/form}
 {/block}
 
+<script>
+   productLabel = document.querySelector("#product-status-label.label").cloneNode(true)
+   document.querySelector(".col-md-7.title").append(productLabel)
+</script>
 
