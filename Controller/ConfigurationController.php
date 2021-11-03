@@ -3,6 +3,7 @@
 
 namespace ProductStatus\Controller;
 
+use ProductStatus\Events\UpdateProductStatusEvent;
 use ProductStatus\Form\EditProductStatusForm;
 use ProductStatus\Model\ProductProductStatus;
 use ProductStatus\Model\ProductProductStatusQuery;
@@ -129,6 +130,11 @@ class ConfigurationController extends BaseAdminController
             $statusToEdit
                 ->setProductStatusId($validForm->get('product_status_id')->getData())
                 ->save();
+
+            $event = new UpdateProductStatusEvent();
+            $event->setProduct($statusToEdit->getProduct());
+            $event->setProductProductStatus($statusToEdit);
+            $this->getDispatcher()->dispatch(UpdateProductStatusEvent::PRODUCT_STATUS_UPDATE, $event);
 
         } catch (\Exception $e) {
             $errorMessage = $e->getMessage();
