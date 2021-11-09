@@ -39,6 +39,7 @@ If your module declare one or more loop, describe them here like this :
 |$STATUS_ID    | the status id of the current product |
 |$STATUS_COLOR | the status color of th current product|
 |$STATUS_DESCRIPTION|the status description of the current product|
+|$STATUS_BO_TITLE| the status name of the current product in backOffice|
 |$STATUS_TITLE| the status name of the current product|
 
 [ProductStatusLoop]
@@ -49,7 +50,8 @@ If your module declare one or more loop, describe them here like this :
 |$ID    | the id of the status |
 |$COLOR | the color of the status|
 |$DESCRIPTION|the description status|
-|$TITLE| the name of the status|
+|$TITLE| the name of the status in frontOffice|
+|$BO_TITLE| the name of the status in backOffice|
 |$CODE| the code of the status|
 |$UPDATED_AT| the last updated time of the status|
 |$CREATED_AT| the created time of the status|
