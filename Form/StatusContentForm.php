@@ -23,12 +23,24 @@ class StatusContentForm extends BaseForm
             'text',
             [
                 'required' => true,
-                'label' => $translator->trans('The status name', [], ProductStatus::DOMAIN_NAME),
+                'label' => $translator->trans('The status name in FrontOffice', [], ProductStatus::DOMAIN_NAME),
                 'label_attr' => [
                     'help' => Translator::getInstance()->trans('Title of the status. Will be displayed in frontOffice', [], ProductStatus::DOMAIN_NAME),
                 ],
             ]
         )
+
+            ->add(
+                'bo-status-name',
+                'text',
+                [
+                    'required' => false,
+                    'label' => $translator->trans('The status name in BackOffice', [], ProductStatus::DOMAIN_NAME),
+                    'label_attr' => [
+                        'help' => Translator::getInstance()->trans('Title of the status displayed in back-office. Leave empty to set the front-office title', [], ProductStatus::DOMAIN_NAME),
+                    ],
+                ]
+            )
 
             ->add(
             'status-code',

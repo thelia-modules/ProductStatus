@@ -13,10 +13,15 @@ return array(
     "The status code" => "Code",
     "The status description" => "Description",
     "Status color" => "Couleur",
-    "Choose a color" => "Associez une couleur au statut",
+    "Choose a color" => "Couleur du label",
     'Title of the status. Will be displayed in frontOffice' => "Titre du status. Il sera visible sur la boutique",
     'It must be unique' => "Doit être unique",
-    'The text displayed in frontOffice' => "Description du statut, facultatif. Elle sera visible sur la boutique",
+    'The text displayed in frontOffice' => "Description du statut, facultative. Elle sera visible sur la boutique",
     "Delete this status" => "Supprimer ce statut",
-    "Do you really want to delete this status ?" => "Etes-vous sûr de vouloir supprimer ce statut ?"
+    "Do you really want to delete this status ?" => "Etes-vous sûr de vouloir supprimer ce statut ?",
+    "BackOffice Title" => "Titre BackOffice",
+    "The status name in BackOffice" => "Titre back-office",
+    "Title of the status displayed in back-office. Leave empty to set the front-office title" => "Laissez vide pour afficher le même titre qu'en front-office",
+    "The status name in FrontOffice" => "Titre front-office",
+    "FrontOffice Title" => "Titre FrontOffice"
 );

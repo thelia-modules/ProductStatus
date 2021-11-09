@@ -21,7 +21,10 @@
                         {intl l='Code'}
                     </th>
                     <th class="object-title">
-                        {intl l='Title'}
+                        {intl l='BackOffice Title' d='productstatus'}
+                    </th>
+                    <th class="object-title">
+                        {intl l='FrontOffice Title' d='productstatus'}
                     </th>
                     <th class="object-title">
                         {intl l='Description'}
@@ -42,7 +45,12 @@
                         </a>
                     </td>
                     <td>
-                        <a id="title" class="label" style="background-color: {$COLOR};" href="#">{$TITLE}</a>
+                        <a id="bo_title" class="label" style="background-color: {$COLOR};" href="#">
+                            {$BO_TITLE}
+                        </a>
+                    </td>
+                    <td>
+                        <a id="title" style="color: #646464">{$TITLE}</a>
                     </td>
                     <td>
                         {$DESCRIPTION}
@@ -107,11 +115,14 @@
 
                 {form_hidden_fields form=$form}
 
-                <div class="col-md-3">
+                <div class="col-md-2">
                     {render_form_field field="status-code"}
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     {render_form_field field="status-name"}
+                </div>
+                <div class="col-md-2">
+                    {render_form_field field="bo-status-name"}
                 </div>
                 <div class="col-md-4">
                     {render_form_field field="info-text"}
@@ -126,13 +137,15 @@
                     {/custom_render_form_field}
                 </div>
 
-                {include
-                file="includes/inner-form-toolbar.html"
-                hide_submit_buttons = false
-                hide_flags = true
+                    {include
+                    file="includes/inner-form-toolbar.html"
+                    hide_submit_buttons = false
+                    hide_flags = true
+                    page_bottom = true
 
-                close_url={url path="/admin/modules"}
-                }
+                    close_url={url path="/admin/modules"}
+                    }
+
             </form>
             {/form}
         </div>

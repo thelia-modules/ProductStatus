@@ -45,7 +45,7 @@
                         </td>
                         <td>
                             <a href="{url path="admin/products/update?product_id=%id" id=$id}">
-                                {$TITLE}
+                                {$BO_TITLE}
                             </a>
                         </td>
                         <td>
@@ -54,7 +54,7 @@
                         <td>
                             {loop type="product_product_status" name="product_product_status"}
                                 {$tmp=$STATUS_ID}
-                                {$current_status=$STATUS_TITLE}
+                                {$current_status=$STATUS_BO_TITLE}
                                 {$current_color=$STATUS_COLOR}
                             {/loop}
                             <a id="product-status-label" class="label" href="{url path="admin/module/ProductStatus"}" style="background-color: {$current_color|default:"#7cd582"};">
@@ -66,7 +66,7 @@
                                 <select onchange="this.form.submit()" {form_field_attributes form=$form field="product_status_id"} >
                                     {loop type="product_status" name="product_status"}
                                         <option {if $ID == $tmp}selected{/if} value="{$ID}">
-                                            {$TITLE}
+                                            {$BO_TITLE}
                                         </option>
                                     {/loop}
                                 </select>

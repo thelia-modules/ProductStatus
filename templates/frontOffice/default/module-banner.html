@@ -4,13 +4,15 @@
         <div class="Product-discount" id="status-banner" style="border: solid #dbbf7c 1px">
             {$STATUS_TITLE|upper}
         </div>
-        <div class="mt-3">
-            {if $STATUS_DESCRIPTION}
-                <i class="feature-avail">
-                    {$STATUS_TITLE} : {$STATUS_DESCRIPTION}
-                </i>
-            {/if}
-        </div>
+        <aside>
+            <div class="mt-3">
+                {if $STATUS_DESCRIPTION}
+                    <i class="feature-avail">
+                        {$STATUS_TITLE} : {$STATUS_DESCRIPTION}
+                    </i>
+                {/if}
+            </div>
+        </aside>
     {/if}
 
     {if $STATUS_ID >= 2 and $STATUS_ID <= 4}

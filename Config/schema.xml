@@ -9,13 +9,14 @@
         <column defaultValue="0" name="protected" required="true" type="TINYINT" />
         <column name="color" size="7" type="CHAR" />
         <column name="code" size="255" type="VARCHAR" />
+        <column name="backoffice_title" size="255" type="VARCHAR" />
         <column name="title" size="255" type="VARCHAR" />
         <column name="description" type="CLOB" />
         <column name="chapo" type="LONGVARCHAR" />
         <column name="postscriptum" type="LONGVARCHAR" />
         <behavior name="timestampable" />
         <behavior name="i18n">
-            <parameter name="i18n_columns" value="title, description, chapo, postscriptum" />
+            <parameter name="i18n_columns" value="backoffice_title, title, description, chapo, postscriptum" />
         </behavior>
     </table>
 

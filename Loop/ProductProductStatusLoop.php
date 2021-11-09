@@ -37,7 +37,7 @@ class ProductProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopI
         $search = ProductStatusQuery::create();
 
         /* manage translations */
-        $this->configureI18nProcessing($search);
+        $this->configureI18nProcessing($search, ['TITLE', 'CHAPO', 'DESCRIPTION', 'POSTSCRIPTUM', 'BACKOFFICE_TITLE']);
 
         $currentProductId =
             $this->getCurrentRequest()->query->get('product_id') ?
@@ -81,6 +81,7 @@ class ProductProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopI
                 ->set('STATUS_ID', $productStatus->getId())
                 ->set('STATUS_COLOR', $productStatus->getColor())
                 ->set('STATUS_DESCRIPTION', $productStatus->getVirtualColumn('i18n_DESCRIPTION'))
+                ->set('STATUS_BO_TITLE', $productStatus->getVirtualColumn('i18n_BACKOFFICE_TITLE'))
                 ->set('STATUS_TITLE', $productStatus->getVirtualColumn('i18n_TITLE'));
             $this->addOutputFields($loopResultRow, $productStatus);
 

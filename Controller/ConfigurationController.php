@@ -48,6 +48,7 @@ class ConfigurationController extends BaseAdminController
                 ->setCode($code)
                 ->setColor($validForm->get('color')->getData())
                 ->setDescription(lcfirst($validForm->get('info-text')->getData()))
+                ->setBackofficeTitle(ucfirst($validForm->get('bo-status-name')->getData() ?? $validForm->get('status-name')->getData()))
                 ->save();
 
         } catch (\Exception $e) {
@@ -98,6 +99,7 @@ class ConfigurationController extends BaseAdminController
                 ->setCode(mb_strtolower($validForm->get('status-code')->getData()))
                 ->setColor($validForm->get('color')->getData())
                 ->setDescription(lcfirst($validForm->get('info-text')->getData()))
+                ->setBackofficeTitle(ucfirst($validForm->get('bo-status-name')->getData() ?? $validForm->get('status-name')->getData()))
                 ->save();
 
         } catch (\Exception $e) {
