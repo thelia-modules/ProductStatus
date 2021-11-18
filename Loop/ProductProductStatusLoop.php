@@ -39,7 +39,7 @@ class ProductProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopI
         /* manage translations */
         $this->configureI18nProcessing($search, ['TITLE', 'CHAPO', 'DESCRIPTION', 'POSTSCRIPTUM', 'BACKOFFICE_TITLE']);
 
-        $currentProductId = $this->getArgumentCollection()->get('product_id');
+        $currentProductId = $this->getCurrentRequest()->query->get('product_id');
 
         if (!$currentProductId)
         {
@@ -47,7 +47,7 @@ class ProductProductStatusLoop extends BaseI18nLoop implements PropelSearchLoopI
         }
 
         $search->useProductProductStatusQuery()
-            ->filterByProductId($currentProductId->getValue())
+            ->filterByProductId($currentProductId)
             ->endUse();
 
         if (null !== $id = $this->getId()) {
