@@ -1,0 +1,8 @@
+{# Theme hook product.bottom: status of the product, never rendered for the "normal" status.
+   The description is HTML restricted to a few tags and attributes when it is saved. #}
+<div class="product-status product-status--{{ css_modifier }} my-6">
+    <span class="product-status__title inline-block rounded px-3 py-1 font-bold uppercase text-white" style="background-color: {{ status.color }};">{{ status.title }}</span>
+    {% if status.description %}
+        <p class="product-status__description mt-3 italic">{{ status.title }} : {{ status.description|raw }}</p>
+    {% endif %}
+</div>

@@ -1,0 +1,8 @@
+{# Rendered by safe_hook('product-edit.top', ...) — plain fragment, no card wrapper #}
+
+<a href="{{ path('admin.module.configure', {module_code: 'ProductStatus'}) }}"
+   class="badge text-decoration-none"
+   style="background-color: {{ current_status.color }};"
+   title="{{ 'Manage product statuses'|trans({}, 'productstatus') }}">
+    {{ current_status.title }}
+</a>
