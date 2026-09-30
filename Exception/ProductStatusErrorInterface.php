@@ -12,10 +12,13 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace ProductStatus\Model;
+namespace ProductStatus\Exception;
 
-use ProductStatus\Model\Base\ProductProductStatusQuery as BaseProductProductStatusQuery;
-
-class ProductProductStatusQuery extends BaseProductProductStatusQuery
+/**
+ * An error of the module that can be shown to an administrator: its translation key
+ * lives in the `productstatus` domain.
+ */
+interface ProductStatusErrorInterface extends \Throwable
 {
+    public function translationKey(): string;
 }

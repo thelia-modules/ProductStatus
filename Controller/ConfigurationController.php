@@ -1,146 +1,175 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of the Thelia package.
+ * http://www.thelia.net
+ *
+ * (c) OpenStudio <info@thelia.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace ProductStatus\Controller;
 
-use ProductStatus\Form\EditProductStatusForm;
-use ProductStatus\Model\ProductProductStatus;
-use ProductStatus\Model\ProductProductStatusQuery;
-use ProductStatus\Model\ProductStatusQuery;
+use ProductStatus\Exception\ProductStatusErrorInterface;
+use ProductStatus\Form\ProductStatusAssignForm;
+use ProductStatus\Form\StatusForm;
 use ProductStatus\ProductStatus;
-use ProductStatus\Form\StatusContentForm;
-use Symfony\Component\HttpFoundation\RequestStack;
+use ProductStatus\Service\EditionLocaleResolver;
+use ProductStatus\Service\ProductStatusService;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
+use Thelia\Core\Security\Exception\TokenAuthenticationException;
 use Thelia\Core\Security\Resource\AdminResources;
-use Thelia\Core\Translation\Translator;
-use Thelia\Tools\URL;
+use Thelia\Form\BaseForm;
+use Thelia\Form\Exception\FormValidationException;
+use Thelia\Tools\TokenProvider;
 
+#[Route('/admin/module/ProductStatus', name: 'product_status.')]
 class ConfigurationController extends BaseAdminController
 {
-    const URL = '/admin/module/ProductStatus';
-
-    public function createStatus(RequestStack $requestStack)
+    #[Route('/status', name: 'status.create', methods: ['POST'])]
+    public function createStatus(ProductStatusService $productStatusService, EditionLocaleResolver $editionLocaleResolver, UrlGeneratorInterface $urlGenerator, LoggerInterface $logger): Response
     {
         if (null !== $response = $this->checkAuth(AdminResources::MODULE, ProductStatus::DOMAIN_NAME, AccessManager::UPDATE)) {
             return $response;
         }
 
-        $form = $this->createForm(StatusContentForm::getName());
-        $errorMessage = null;
+        $form = $this->createForm(StatusForm::class);
+
+        return $this->saveStatus($form, null, $productStatusService, $editionLocaleResolver, $urlGenerator, $logger);
+    }
+
+    #[Route('/status/{id}', name: 'status.update', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function updateStatus(int $id, ProductStatusService $productStatusService, EditionLocaleResolver $editionLocaleResolver, UrlGeneratorInterface $urlGenerator, LoggerInterface $logger): Response
+    {
+        if (null !== $response = $this->checkAuth(AdminResources::MODULE, ProductStatus::DOMAIN_NAME, AccessManager::UPDATE)) {
+            return $response;
+        }
+
+        $form = $this->createForm(StatusForm::class);
+
+        return $this->saveStatus($form, $id, $productStatusService, $editionLocaleResolver, $urlGenerator, $logger);
+    }
+
+    #[Route('/status/{id}/delete', name: 'status.delete', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function deleteStatus(int $id, ProductStatusService $productStatusService, TokenProvider $tokenProvider, UrlGeneratorInterface $urlGenerator, LoggerInterface $logger): Response
+    {
+        if (null !== $response = $this->checkAuth(AdminResources::MODULE, ProductStatus::DOMAIN_NAME, AccessManager::UPDATE)) {
+            return $response;
+        }
+
+        $redirectUrl = $urlGenerator->generate('admin.module.configure', ['module_code' => ProductStatus::getModuleCode()]);
+
+        try {
+            $request = $this->getRequest();
+            $tokenProvider->checkToken((string) ($request->request->get('_token') ?? $request->query->get('_token') ?? ''));
+
+            $productStatusService->delete($id);
+        } catch (TokenAuthenticationException) {
+            $this->addFlash('danger', $this->translator->trans('Your session has expired, please reload the page and try again', [], ProductStatus::DOMAIN_NAME));
+        } catch (ProductStatusErrorInterface $exception) {
+            $this->addFlash('danger', $this->translator->trans($exception->translationKey(), [], ProductStatus::DOMAIN_NAME));
+        } catch (\Throwable $exception) {
+            $this->flashUnexpectedError($exception, $logger);
+        }
+
+        return $this->generateRedirect($redirectUrl);
+    }
+
+    #[Route('/product/{productId}/assign', name: 'product.assign', methods: ['POST'], requirements: ['productId' => '\d+'])]
+    public function assignProductStatus(int $productId, ProductStatusService $productStatusService, UrlGeneratorInterface $urlGenerator, LoggerInterface $logger): Response
+    {
+        if (null !== $response = $this->checkAuth(AdminResources::MODULE, ProductStatus::DOMAIN_NAME, AccessManager::UPDATE)) {
+            return $response;
+        }
+
+        $productStatusAssignForm = $this->createForm(ProductStatusAssignForm::class);
+        $fallbackUrl = $urlGenerator->generate('admin.products.update', ['product_id' => $productId, 'current_tab' => 'modules']);
+
+        try {
+            $validForm = $this->validateForm($productStatusAssignForm);
+
+            $productStatusService->assign($productId, (int) $validForm->get('product_status_id')->getData());
+
+            return $this->generateSuccessRedirect($productStatusAssignForm) ?? $this->generateRedirect($fallbackUrl);
+        } catch (FormValidationException $exception) {
+            $this->setupFormErrorContext(
+                $this->translator->trans('Product status assignment'),
+                $this->createStandardFormValidationErrorMessage($exception),
+                $productStatusAssignForm,
+                $exception,
+            );
+            $this->addFlash('danger', $this->createStandardFormValidationErrorMessage($exception));
+        } catch (ProductStatusErrorInterface $exception) {
+            $this->addFlash('danger', $this->translator->trans($exception->translationKey(), [], ProductStatus::DOMAIN_NAME));
+        } catch (\Throwable $exception) {
+            $this->flashUnexpectedError($exception, $logger);
+        }
+
+        return $this->generateErrorRedirect($productStatusAssignForm) ?? $this->generateRedirect($fallbackUrl);
+    }
+
+    /**
+     * The translation is written in the edit language ({@see EditionLocaleResolver}), the
+     * one the configuration screen was rendered in, never in the admin interface language.
+     */
+    private function saveStatus(
+        BaseForm $form,
+        ?int $id,
+        ProductStatusService $productStatusService,
+        EditionLocaleResolver $editionLocaleResolver,
+        UrlGeneratorInterface $urlGenerator,
+        LoggerInterface $logger,
+    ): Response {
+        $fallbackUrl = $urlGenerator->generate('admin.module.configure', ['module_code' => ProductStatus::getModuleCode()]);
 
         try {
             $validForm = $this->validateForm($form);
-            $productStatus = new \ProductStatus\Model\ProductStatus();
-            $code = mb_strtolower($validForm->get('status-code')->getData());
+            $data = $validForm->getData();
 
-            $session = $requestStack->getSession();
-
-            if (ProductStatusQuery::create()->findOneByCode($code)) {
-                $errorMessage = ProductStatus::CODE_EXIST_MESSAGE;
-                $session->getFlashBag()->add('status-exist-error', $errorMessage);
-
-                return $this->generateRedirect(URL::getInstance()->absoluteUrl(self::URL,
-                    ['errorMessage' => $errorMessage]));
-            }
-
-            $productStatus
-                ->setLocale($session->getAdminEditionLang()->getLocale())
-                ->setTitle(ucfirst($validForm->get('status-name')->getData()))
-                ->setCode($code)
-                ->setColor($validForm->get('color')->getData())
-                ->setDescription(lcfirst($validForm->get('info-text')->getData()))
-                ->save();
-
-        } catch (\Exception $e) {
-            $this->setupFormErrorContext(
-                Translator::getInstance()->trans('status created'),
-                $errorMessage = $e->getMessage(),
-                $form,
-                $e
+            $productStatusService->save(
+                id: $id,
+                code: (string) $data['code'],
+                color: (string) $data['color'],
+                title: (string) $data['title'],
+                description: '' !== (string) $data['description'] ? (string) $data['description'] : null,
+                locale: $editionLocaleResolver->resolveLocale($this->getRequest()),
             );
+
+            return $this->generateSuccessRedirect($form) ?? $this->generateRedirect($fallbackUrl);
+        } catch (FormValidationException $exception) {
+            $this->setupFormErrorContext(
+                $this->translator->trans('Product status'),
+                $this->createStandardFormValidationErrorMessage($exception),
+                $form,
+                $exception,
+            );
+            $this->addFlash('danger', $this->createStandardFormValidationErrorMessage($exception));
+        } catch (ProductStatusErrorInterface $exception) {
+            $this->addFlash('danger', $this->translator->trans($exception->translationKey(), [], ProductStatus::DOMAIN_NAME));
+        } catch (\Throwable $exception) {
+            $this->flashUnexpectedError($exception, $logger);
         }
 
-        return $this->generateRedirect(URL::getInstance()->absoluteUrl(self::URL,
-            $errorMessage ? ['errorMessage' => $errorMessage] : null));
+        return $this->generateErrorRedirect($form) ?? $this->generateRedirect($fallbackUrl);
     }
 
-    public function deleteStatus(RequestStack $requestStack)
+    /**
+     * Anything but a business error (database, bug) is logged with its details and shown
+     * as a generic message: its raw text may carry SQL or internal paths.
+     */
+    private function flashUnexpectedError(\Throwable $exception, LoggerInterface $logger): void
     {
-        $errorMessage = null;
+        $logger->error('ProductStatus: {message}', ['message' => $exception->getMessage(), 'exception' => $exception]);
 
-        try{
-            $productId = $requestStack->getCurrentRequest()->attributes->get('id');
-
-            ProductStatusQuery::create()
-                ->findOneById($productId)
-                ->delete();
-
-        } catch (\Exception $e) {
-            $errorMessage = $e->getMessage();
-        }
-
-        return $this->generateRedirect(URL::getInstance()->absoluteUrl(self::URL,
-            $errorMessage ? ['errorMessage' => $errorMessage] : null));
-    }
-
-    public function editStatus(RequestStack $requestStack)
-    {
-        $errorMessage = null;
-        $form = $this->createForm(StatusContentForm::getName());
-        $validForm = $this->validateForm($form);
-
-        try{
-            $productId = $requestStack->getCurrentRequest()->attributes->get('id');
-
-            $statusToEdit = ProductStatusQuery::create()
-                ->findOneById($productId);
-
-            $statusToEdit
-                ->setLocale($requestStack->getSession()->getAdminEditionLang()->getLocale())
-                ->setTitle(ucfirst($validForm->get('status-name')->getData()))
-                ->setCode(mb_strtolower($validForm->get('status-code')->getData()))
-                ->setColor($validForm->get('color')->getData())
-                ->setDescription(lcfirst($validForm->get('info-text')->getData()))
-                ->save();
-
-        } catch (\Exception $e) {
-            $errorMessage = $e->getMessage();
-        }
-
-        return $this->generateRedirect(URL::getInstance()->absoluteUrl(self::URL,
-            $errorMessage ? ['errorMessage' => $errorMessage] : null));
-    }
-
-    public function editProductStatus(RequestStack $requestStack)
-    {
-        $errorMessage = null;
-        $form = $this->createForm(EditProductStatusForm::getName());
-        $validForm = $this->validateForm($form);
-
-        try{
-            $productId = $requestStack->getCurrentRequest()->attributes->get('product_id');
-
-            $url = "/admin/products/update?product_id=$productId&current_tab=modules#refresh_anchor";
-
-            $statusToEdit = ProductProductStatusQuery::create()
-                ->findOneByProductId($productId);
-
-            if(!$statusToEdit) {
-                $newEntry = new ProductProductStatus();
-
-                $statusToEdit = $newEntry->setProductId($productId);
-            }
-
-            $statusToEdit
-                ->setProductStatusId($validForm->get('product_status_id')->getData())
-                ->save();
-
-        } catch (\Exception $e) {
-            $errorMessage = $e->getMessage();
-        }
-
-        return $this->generateRedirect(URL::getInstance()->absoluteUrl($url,
-            $errorMessage ? ['errorMessage' => $errorMessage] : null));
+        $this->addFlash('danger', $this->translator->trans('An unexpected error occurred, the change was not saved', [], ProductStatus::DOMAIN_NAME));
     }
 }

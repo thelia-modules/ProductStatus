@@ -1,22 +1,31 @@
 <?php
-return array(
-    "This code already exists, please pick another one" => "Ce code existe déjà, veuillez en choisir un autre",
-    "product status" => "statut du produit",
-    "Title" => "Titre",
-    "Price" => "Prix",
-    "Reference" => "Référence",
-    "Status" => "Statut",
-    "Edit status" => "Editer le Statut",
-    "Existing status" => "Les statuts existants",
-    "Add a status" => "ajouter un statut",
-    "The status name" => "Nom",
-    "The status code" => "Code",
-    "The status description" => "Description",
-    "Status color" => "Couleur",
-    "Choose a color" => "Associez une couleur au statut",
-    'Title of the status. Will be displayed in frontOffice' => "Titre du status. Il sera visible sur la boutique",
-    'It must be unique' => "Doit être unique",
-    'The text displayed in frontOffice' => "Description du statut, facultatif. Elle sera visible sur la boutique",
-    "Delete this status" => "Supprimer ce statut",
-    "Do you really want to delete this status ?" => "Etes-vous sûr de vouloir supprimer ce statut ?"
-);
+
+declare(strict_types=1);
+
+return [
+    'This code already exists, please pick another one' => 'Ce code existe déjà, veuillez en choisir un autre',
+    'product status' => 'statut du produit',
+    'Existing status' => 'Les statuts existants',
+    'Add a status' => 'Ajouter un statut',
+    'Edit status' => 'Éditer le statut',
+    'Delete this status' => 'Supprimer ce statut',
+    'Do you really want to delete this status ?' => 'Êtes-vous sûr de vouloir supprimer ce statut ?',
+    'The status name' => 'Nom',
+    'The status code' => 'Code',
+    'The status description' => 'Description',
+    'Status color' => 'Couleur',
+    'Choose a color' => 'Associez une couleur au statut',
+    'Title of the status. Will be displayed in frontOffice' => 'Titre du statut. Il sera visible sur la boutique',
+    'It must be unique' => 'Doit être unique',
+    'The text displayed in frontOffice' => 'Description du statut, facultatif. Elle sera visible sur la boutique',
+    'A protected status cannot be deleted' => 'Un statut protégé ne peut pas être supprimé',
+    'The code of a protected status cannot be changed' => "Le code d'un statut protégé ne peut pas être modifié",
+    'Manage product statuses' => 'Gérer les statuts produit',
+    'The status code is required' => 'Le code du statut est obligatoire',
+    'The status title is required' => 'Le nom du statut est obligatoire',
+    'The color must be written #rgb or #rrggbb' => "La couleur doit s'écrire #rgb ou #rrggbb",
+    'This status does not exist' => "Ce statut n'existe pas",
+    'Your session has expired, please reload the page and try again' => 'Votre session a expiré, rechargez la page puis recommencez',
+    'An unexpected error occurred, the change was not saved' => "Une erreur inattendue est survenue, la modification n'a pas été enregistrée",
+    'The code may only contain lowercase letters, digits, "-" and "_"' => 'Le code ne peut contenir que des minuscules, des chiffres, « - » et « _ »',
+];

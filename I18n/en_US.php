@@ -1,5 +1,31 @@
 <?php
-return array(
-    "This code already exists, please pick another one" => "This code already exists, please pick another one",
-    "product status" => "product status"
-);
+
+declare(strict_types=1);
+
+return [
+    'This code already exists, please pick another one' => 'This code already exists, please pick another one',
+    'product status' => 'product status',
+    'Existing status' => 'Existing status',
+    'Add a status' => 'Add a status',
+    'Edit status' => 'Edit status',
+    'Delete this status' => 'Delete this status',
+    'Do you really want to delete this status ?' => 'Do you really want to delete this status ?',
+    'The status name' => 'Name',
+    'The status code' => 'Code',
+    'The status description' => 'Description',
+    'Status color' => 'Color',
+    'Choose a color' => 'Choose a color for the status',
+    'Title of the status. Will be displayed in frontOffice' => 'Title of the status. It will be displayed on the shop',
+    'It must be unique' => 'It must be unique',
+    'The text displayed in frontOffice' => 'Description of the status, optional. It will be displayed on the shop',
+    'A protected status cannot be deleted' => 'A protected status cannot be deleted',
+    'The code of a protected status cannot be changed' => 'The code of a protected status cannot be changed',
+    'Manage product statuses' => 'Manage product statuses',
+    'The status code is required' => 'The status code is required',
+    'The status title is required' => 'The status title is required',
+    'The color must be written #rgb or #rrggbb' => 'The color must be written #rgb or #rrggbb',
+    'This status does not exist' => 'This status does not exist',
+    'Your session has expired, please reload the page and try again' => 'Your session has expired, please reload the page and try again',
+    'An unexpected error occurred, the change was not saved' => 'An unexpected error occurred, the change was not saved',
+    'The code may only contain lowercase letters, digits, "-" and "_"' => 'The code may only contain lowercase letters, digits, "-" and "_"',
+];

@@ -12,10 +12,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace ProductStatus\Model;
+namespace ProductStatus\Event;
 
-use ProductStatus\Model\Base\ProductProductStatusQuery as BaseProductProductStatusQuery;
-
-class ProductProductStatusQuery extends BaseProductProductStatusQuery
+final class ProductStatusEvents
 {
+    public const PRODUCT_STATUS_CHANGED = 'productstatus.product_status.changed';
 }

@@ -1,0 +1,23 @@
+{# Rendered inside a hook_cards() wrapper (its own titled card) — no outer card here #}
+
+{% if is_granted('UPDATE', {resource: 'admin.module', module: 'ProductStatus'}) %}
+    {% form_theme assign_form with bo_form_themes only %}
+    {{ form_start(assign_form, {action: path('product_status.product.assign', {productId: product_id}), method: 'post'}) }}
+    {{ form_widget(assign_form.success_url, {value: path('admin.products.update', {product_id: product_id, current_tab: 'modules'})}) }}
+    {{ form_widget(assign_form.error_url, {value: path('admin.products.update', {product_id: product_id, current_tab: 'modules'})}) }}
+    {% do assign_form.success_url.setRendered %}
+    {% do assign_form.error_url.setRendered %}
+
+    <div class="d-flex align-items-center gap-3">
+        <span class="badge" style="background-color: {{ current_status.color }};">{{ current_status.title }}</span>
+
+        {{ form_widget(assign_form.product_status_id, {attr: {
+            class: 'form-select w-auto',
+            onchange: 'this.form.submit()',
+        }}) }}
+    </div>
+
+    {{ form_end(assign_form) }}
+{% else %}
+    <span class="badge" style="background-color: {{ current_status.color }};">{{ current_status.title }}</span>
+{% endif %}
