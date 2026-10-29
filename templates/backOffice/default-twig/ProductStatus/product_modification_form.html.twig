@@ -1,0 +1,19 @@
+{# Rendered by safe_hook('product.modification.form-right.bottom', ...) inside the product form, framed as the card hook_cards() draws for a module. Disabled, so not posted, without the update permission of the module. The code in each label keeps apart several statuses sharing the same title #}
+
+<div class="card mb-3 bo-hook-card">
+    <div class="card-header py-2 d-flex align-items-center gap-2">
+        <i class="bi bi-puzzle text-muted" aria-hidden="true"></i>
+        <h3 class="h6 mb-0 text-muted">{{ 'Product status'|trans({}, 'productstatus') }}</h3>
+    </div>
+    <div class="card-body">
+        {# The badge above the select: a select sized to its longest label overflows the narrow column of the form #}
+        <span class="badge mb-2" style="background-color: {{ current_status.color }};">{{ current_status.title }}</span>
+        <label class="visually-hidden" for="{{ form_name }}_{{ field }}">{{ 'Product status'|trans({}, 'productstatus') }}</label>
+        <select id="{{ form_name }}_{{ field }}" name="{{ form_name }}[{{ field }}]" class="form-select" data-testid="product-edit-status"
+            {{- is_granted('UPDATE', {resource: 'admin.module', module: module_code}) ? '' : ' disabled' }}>
+            {% for status in statuses %}
+                <option value="{{ status.id }}"{{ status.id == current_status.id ? ' selected' }}>{{ status.title }} ({{ status.code }})</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>

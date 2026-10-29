@@ -34,6 +34,7 @@ descriptions with the rules of `save()`.
 | `statusOf(int $productId, string $locale): ProductStatusView` | status of a product, `normal` when it has none (read only) |
 | `statusesOf(array $productIds, string $locale): array` | `array<int, ProductStatusView>` keyed by product id, two queries whatever the number of products |
 | `all(string $locale): array` | every status, ordered by id |
+| `ids(): array` | the id of every status, ordered by id, without reading any translation |
 | `assign(int $productId, int $statusId): void` | replaces the status of the product; dispatches `ProductStatusEvents::PRODUCT_STATUS_CHANGED` only when it changes |
 | `save(?int $id, string $code, string $color, string $title, ?string $description, string $locale): int` | creates or updates a status; the code is lower-cased, unique and a slug (`a-z`, `0-9`, `-`, `_`) when it is new or changed (a 2.x code with spaces can be kept as is), the code of a protected status cannot change, the color is `#rgb` or `#rrggbb` (stored `#rrggbb`), the description keeps only `<b><strong><i><em><a><br>` without any attribute but the `href` of an http(s), mailto or relative link |
 | `translations(string $locale): array` | titles and descriptions stored in `$locale`, without fallback |
@@ -79,6 +80,29 @@ Statuses are edited in the back-office edit language, chosen with the language s
 configuration screen (`edit_language_id`, then the edit language kept in the admin session), never in the
 language of the admin interface. The edit forms show what is stored in
 that language only, empty when a status has no translation there.
+
+The status of a product is chosen in the General tab of the product edit page, under the brand, and
+saved with the product by its Save button (the `product.modification.form-right.bottom` hook of the
+default-twig back-office, first of the module blocks there, and a field added to the
+`thelia_product_modification` form). The select lists each status as its title in the edit language of the
+page followed by its code, which keeps apart statuses sharing a title; the badge above it shows the saved
+status. Saving the status shown unchanged writes nothing.
+
+It needs the update permission of the module, checked when the form is built and again before writing.
+Without it the select is shown disabled and not posted; a product form that still carries the field (a
+page opened before the permission was withdrawn) is refused as a whole, product included, and so is a
+form carrying a status deleted since the page was displayed. The product is saved before its status: a
+status deleted between that check and the write leaves a warning and the rest of the product saved. The
+badge on top of the page links to the configuration screen.
+
+## Changes in 3.1.0
+
+- The status select moves from the Modules tab of the product edit page to its General tab, under the
+  brand, and is saved with the product. The block of the Modules tab is gone: Thelia deletes its
+  registration (`onProductTabContent` on `product.tab-content`) when it registers the hooks again.
+- The product status assignment route (`product_status.product.assign`) and its form
+  (`ProductStatusAssignForm`), used by that block only, are removed.
+- `ProductStatusService::ids()` lists the status ids without reading their translations.
 
 ## Changes in 3.0.0
 
