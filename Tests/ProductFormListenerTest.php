@@ -19,17 +19,20 @@ use ProductStatus\EventListener\ProductFormListener;
 use ProductStatus\Model\ProductProductStatusQuery;
 use ProductStatus\Model\ProductStatusQuery;
 use ProductStatus\Service\ProductStatusService;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Thelia\Core\Event\Product\ProductUpdateEvent;
 use Thelia\Core\HttpFoundation\Session\Session;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Model\Admin;
 use Thelia\Model\Product;
+use Thelia\Model\ProductQuery;
 use Thelia\Test\FixtureFactory;
 use Thelia\Test\IntegrationTestCase;
 
@@ -78,19 +81,83 @@ final class ProductFormListenerTest extends IntegrationTestCase
         self::assertSame(0, ProductProductStatusQuery::create()->filterByProductId($product->getId())->count(), 'a product without status keeps no link');
     }
 
-    public function testWithoutTheUpdatePermissionOfTheModuleTheStatusIsLeftAlone(): void
+    public function testWithoutTheUpdatePermissionOfTheModuleTheFormCarryingTheStatusIsRefused(): void
     {
         $product = $this->product();
+        $titleBefore = $product->setLocale('en_US')->getTitle();
         $catalogueAdministrator = $this->fixtures->restrictedAdmin([AdminResources::PRODUCT => [AccessManager::VIEW, AccessManager::UPDATE]]);
 
-        $this->saveProduct($product, $catalogueAdministrator, $this->statusId('sale'));
+        $session = new Session(new MockArraySessionStorage());
+
+        $response = $this->saveProduct($product, $catalogueAdministrator, $this->statusId('sale'), $session);
+
+        self::assertSame(302, $response->getStatusCode(), (string) $response->getContent());
+        self::assertNotEmpty($session->getFlashBag()->peek('danger'), 'the form refused for its extra field');
+        self::assertSame('normal', $this->service()->statusOf($product->getId(), 'en_US')->code);
+        self::assertSame($titleBefore, ProductQuery::create()->findPk($product->getId())?->setLocale('en_US')->getTitle(), 'the product is not saved either');
+    }
+
+    public function testAStatusDeletedSinceThePageWasDisplayedRefusesTheForm(): void
+    {
+        $product = $this->product();
+        $session = new Session(new MockArraySessionStorage());
+
+        $response = $this->saveProduct($product, $this->fixtures->admin(), $this->unknownStatusId(), $session);
+
+        self::assertSame(302, $response->getStatusCode(), (string) $response->getContent());
+        self::assertNotEmpty($session->getFlashBag()->peek('danger'), 'the choice is no longer valid');
+        self::assertSame(0, ProductProductStatusQuery::create()->filterByProductId($product->getId())->count());
+    }
+
+    public function testWithoutTheUpdatePermissionOfTheModuleTheListenerWritesNothing(): void
+    {
+        $product = $this->product();
+        $this->signIn($this->fixtures->restrictedAdmin([AdminResources::PRODUCT => [AccessManager::VIEW, AccessManager::UPDATE]]));
+
+        $this->listener()->saveStatus($this->updateEvent($product, $this->statusId('sale')));
 
         self::assertSame('normal', $this->service()->statusOf($product->getId(), 'en_US')->code);
     }
 
-    private function saveProduct(Product $product, Admin $admin, int $statusId): Response
+    public function testAStatusDeletedBetweenTheValidationAndTheWriteLeavesAWarningAndNoException(): void
     {
-        $session = new Session(new MockArraySessionStorage());
+        $product = $this->product();
+        $session = $this->signIn($this->fixtures->admin());
+        $this->listener()->saveStatus($this->updateEvent($product, $this->unknownStatusId()));
+
+        self::assertCount(1, $session->getFlashBag()->peek('warning'));
+        self::assertSame('normal', $this->service()->statusOf($product->getId(), 'en_US')->code);
+    }
+
+    private function signIn(Admin $admin): Session
+    {
+        $session = $this->requestStack()->getMainRequest()?->getSession();
+        self::assertInstanceOf(Session::class, $session);
+        $session->setAdminUser($admin);
+
+        return $session;
+    }
+
+    private function updateEvent(Product $product, int $statusId): ProductUpdateEvent
+    {
+        $event = (new ProductUpdateEvent($product->getId()))->setLocale('en_US');
+        $event->setProduct($product);
+        // As the legacy form bridge of the back-office sets a field without a setter on the event.
+        $event->__set(ProductFormListener::FIELD, (string) $statusId);
+
+        return $event;
+    }
+
+    private function listener(): ProductFormListener
+    {
+        $listener = static::getContainer()->get(ProductFormListener::class);
+        self::assertInstanceOf(ProductFormListener::class, $listener);
+
+        return $listener;
+    }
+
+    private function saveProduct(Product $product, Admin $admin, int $statusId, Session $session = new Session(new MockArraySessionStorage())): Response
+    {
         $session->setAdminUser($admin);
 
         $request = Request::create('/admin/products/save', 'POST');
@@ -117,20 +184,29 @@ final class ProductFormListenerTest extends IntegrationTestCase
     private function handleAsMainRequest(Request $request): Response
     {
         $requestStack = $this->requestStack();
-        $pushedRequests = [];
-        while (null !== $pushedRequest = $requestStack->pop()) {
-            $pushedRequests[] = $pushedRequest;
-        }
+        $pushedRequests = $this->popAll($requestStack);
 
         try {
             return self::$kernel->handle($request);
         } finally {
-            while (null !== $requestStack->pop()) {
-            }
+            $this->popAll($requestStack);
             foreach (array_reverse($pushedRequests) as $pushedRequest) {
                 $requestStack->push($pushedRequest);
             }
         }
+    }
+
+    /**
+     * @return list<Request>
+     */
+    private function popAll(RequestStack $requestStack): array
+    {
+        $poppedRequests = [];
+        while (null !== $poppedRequest = $requestStack->pop()) {
+            $poppedRequests[] = $poppedRequest;
+        }
+
+        return $poppedRequests;
     }
 
     private function requestStack(): RequestStack
@@ -163,6 +239,11 @@ final class ProductFormListenerTest extends IntegrationTestCase
     private function statusId(string $code): int
     {
         return (int) ProductStatusQuery::create()->findOneByCode($code)?->getId();
+    }
+
+    private function unknownStatusId(): int
+    {
+        return (int) ProductStatusQuery::create()->orderById(Criteria::DESC)->findOne()?->getId() + 1000;
     }
 
     private function service(): ProductStatusService

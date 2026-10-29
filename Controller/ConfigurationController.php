@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace ProductStatus\Controller;
 
 use ProductStatus\Exception\ProductStatusErrorInterface;
-use ProductStatus\Form\ProductStatusAssignForm;
 use ProductStatus\Form\StatusForm;
 use ProductStatus\ProductStatus;
 use ProductStatus\Service\EditionLocaleResolver;
@@ -82,39 +81,6 @@ class ConfigurationController extends BaseAdminController
         }
 
         return $this->generateRedirect($redirectUrl);
-    }
-
-    #[Route('/product/{productId}/assign', name: 'product.assign', methods: ['POST'], requirements: ['productId' => '\d+'])]
-    public function assignProductStatus(int $productId, ProductStatusService $productStatusService, UrlGeneratorInterface $urlGenerator, LoggerInterface $logger): Response
-    {
-        if (null !== $response = $this->checkAuth(AdminResources::MODULE, ProductStatus::DOMAIN_NAME, AccessManager::UPDATE)) {
-            return $response;
-        }
-
-        $productStatusAssignForm = $this->createForm(ProductStatusAssignForm::class);
-        $fallbackUrl = $urlGenerator->generate('admin.products.update', ['product_id' => $productId, 'current_tab' => 'modules']);
-
-        try {
-            $validForm = $this->validateForm($productStatusAssignForm);
-
-            $productStatusService->assign($productId, (int) $validForm->get('product_status_id')->getData());
-
-            return $this->generateSuccessRedirect($productStatusAssignForm) ?? $this->generateRedirect($fallbackUrl);
-        } catch (FormValidationException $exception) {
-            $this->setupFormErrorContext(
-                $this->translator->trans('Product status assignment'),
-                $this->createStandardFormValidationErrorMessage($exception),
-                $productStatusAssignForm,
-                $exception,
-            );
-            $this->addFlash('danger', $this->createStandardFormValidationErrorMessage($exception));
-        } catch (ProductStatusErrorInterface $exception) {
-            $this->addFlash('danger', $this->translator->trans($exception->translationKey(), [], ProductStatus::DOMAIN_NAME));
-        } catch (\Throwable $exception) {
-            $this->flashUnexpectedError($exception, $logger);
-        }
-
-        return $this->generateErrorRedirect($productStatusAssignForm) ?? $this->generateRedirect($fallbackUrl);
     }
 
     /**

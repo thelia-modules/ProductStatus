@@ -29,4 +29,5 @@ return [
     'An unexpected error occurred, the change was not saved' => "Une erreur inattendue est survenue, la modification n'a pas été enregistrée",
     'The code may only contain lowercase letters, digits, "-" and "_"' => 'Le code ne peut contenir que des minuscules, des chiffres, « - » et « _ »',
     'Product status' => 'Statut du produit',
+    'The product was saved, but not its status: %reason' => 'Le produit a été enregistré, mais pas son statut : %reason',
 ];

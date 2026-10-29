@@ -85,6 +85,14 @@ final readonly class ProductStatusService
     }
 
     /**
+     * @return list<int> every status id, ordered by id
+     */
+    public function ids(): array
+    {
+        return $this->reader->ids();
+    }
+
+    /**
      * Titles and descriptions as stored in $locale, empty when a status has none there.
      *
      * @return array<int, array{title: string, description: string}> keyed by status id

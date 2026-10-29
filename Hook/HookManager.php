@@ -16,6 +16,7 @@ namespace ProductStatus\Hook;
 
 use ProductStatus\EventListener\ProductFormListener;
 use ProductStatus\Form\StatusForm;
+use ProductStatus\ProductStatus;
 use ProductStatus\Service\EditionLocaleResolver;
 use ProductStatus\Service\ProductStatusService;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -40,7 +41,7 @@ class HookManager extends BaseHook
     }
 
     /**
-     * @return array<string, list<array{type: string, method: string}>>
+     * @return array<string, list<array{type: string, method: string, position?: int}>>
      */
     public static function getSubscribedHooks(): array
     {
@@ -48,8 +49,9 @@ class HookManager extends BaseHook
             'module.configuration' => [
                 ['type' => 'back', 'method' => 'onModuleConfiguration'],
             ],
+            // First of the module blocks, right under the brand: read only when the module_hook row is created.
             'product.modification.form-right.bottom' => [
-                ['type' => 'back', 'method' => 'onProductModificationForm'],
+                ['type' => 'back', 'method' => 'onProductModificationForm', 'position' => 1],
             ],
             'product-edit.top' => [
                 ['type' => 'back', 'method' => 'onProductEditTop'],
@@ -111,6 +113,7 @@ class HookManager extends BaseHook
             'form_name' => ProductFormListener::PRODUCT_FORM,
             'statuses' => $this->productStatusService->all($locale),
             'current_status' => $this->productStatusService->statusOf($productId, $locale),
+            'module_code' => ProductStatus::getModuleCode(),
         ]));
     }
 

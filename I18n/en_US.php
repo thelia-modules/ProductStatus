@@ -29,4 +29,5 @@ return [
     'An unexpected error occurred, the change was not saved' => 'An unexpected error occurred, the change was not saved',
     'The code may only contain lowercase letters, digits, "-" and "_"' => 'The code may only contain lowercase letters, digits, "-" and "_"',
     'Product status' => 'Product status',
+    'The product was saved, but not its status: %reason' => 'The product was saved, but not its status: %reason',
 ];

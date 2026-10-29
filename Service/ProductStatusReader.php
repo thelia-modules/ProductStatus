@@ -17,6 +17,7 @@ namespace ProductStatus\Service;
 use ProductStatus\Model\Map\ProductStatusTableMap;
 use ProductStatus\Model\ProductProductStatusQuery;
 use ProductStatus\Model\ProductStatusI18nQuery;
+use ProductStatus\Model\ProductStatusQuery;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Propel;
 use Thelia\Model\ConfigQuery;
@@ -29,6 +30,14 @@ use Thelia\Model\Lang;
 final readonly class ProductStatusReader
 {
     public const DEFAULT_STATUS_CODE = 'normal';
+
+    /**
+     * @return list<int> every status id, ordered by id, without reading any translation
+     */
+    public function ids(): array
+    {
+        return array_map('intval', ProductStatusQuery::create()->orderById()->select('Id')->find()->getData());
+    }
 
     /**
      * @param list<int> $productIds

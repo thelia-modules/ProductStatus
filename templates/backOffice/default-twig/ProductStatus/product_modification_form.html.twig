@@ -10,7 +10,7 @@
         <span class="badge mb-2" style="background-color: {{ current_status.color }};">{{ current_status.title }}</span>
         <label class="visually-hidden" for="{{ form_name }}_{{ field }}">{{ 'Product status'|trans({}, 'productstatus') }}</label>
         <select id="{{ form_name }}_{{ field }}" name="{{ form_name }}[{{ field }}]" class="form-select" data-testid="product-edit-status"
-            {{- is_granted('UPDATE', {resource: 'admin.module', module: 'ProductStatus'}) ? '' : ' disabled' }}>
+            {{- is_granted('UPDATE', {resource: 'admin.module', module: module_code}) ? '' : ' disabled' }}>
             {% for status in statuses %}
                 <option value="{{ status.id }}"{{ status.id == current_status.id ? ' selected' }}>{{ status.title }} ({{ status.code }})</option>
             {% endfor %}
