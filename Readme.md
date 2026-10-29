@@ -80,6 +80,19 @@ configuration screen (`edit_language_id`, then the edit language kept in the adm
 language of the admin interface. The edit forms show what is stored in
 that language only, empty when a status has no translation there.
 
+The status of a product is chosen in the General tab of the product edit page, under the brand, and
+saved with the product by its Save button (the `product.modification.form-right.bottom` hook and a field
+added to the `thelia_product_modification` form). The select lists each status as its title in the edit
+language of the page followed by its code, which keeps apart statuses sharing a title. It needs the update
+permission of the module: without it, the select is shown disabled and the status is left as it is. Saving the status shown unchanged writes nothing. The badge on top of the page
+links to the configuration screen.
+
+## Changes in 3.1.0
+
+- The status select moves from the Modules tab of the product edit page to its General tab, under the
+  brand, and is saved with the product. The block of the Modules tab is gone: Thelia deletes its
+  registration (`onProductTabContent` on `product.tab-content`) when it registers the hooks again.
+
 ## Changes in 3.0.0
 
 - Thelia 3 only (PHP 8.3 or later). Smarty templates, loops and `routing.xml` are gone.

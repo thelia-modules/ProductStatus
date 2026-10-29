@@ -28,4 +28,5 @@ return [
     'Your session has expired, please reload the page and try again' => 'Your session has expired, please reload the page and try again',
     'An unexpected error occurred, the change was not saved' => 'An unexpected error occurred, the change was not saved',
     'The code may only contain lowercase letters, digits, "-" and "_"' => 'The code may only contain lowercase letters, digits, "-" and "_"',
+    'Product status' => 'Product status',
 ];
