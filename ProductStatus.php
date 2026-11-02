@@ -27,6 +27,8 @@ class ProductStatus extends BaseModule
 
     public const UNIQUE_LINK_SCRIPT = __DIR__.'/Config/update/3.0.0.sql';
 
+    public const ADMIN_TITLE_SCRIPT = __DIR__.'/Config/update/3.2.0.sql';
+
     private const FIRST_THELIA3_VERSION = '3.0.0';
 
     /**
@@ -36,11 +38,15 @@ class ProductStatus extends BaseModule
      * The one-status-per-product script runs at every activation: a database carried over
      * from the 2.x line without the module configuration (so without `is_initialized`)
      * still gets its duplicate links removed and the unique index added, and its 2.x
-     * descriptions cleaned. Both steps change nothing on a database already up to date.
+     * descriptions cleaned. The back-office title script runs first, at every activation: such
+     * a database gets the admin_title column, filled with the titles, before the installation
+     * script inserts its rows with that column. These steps change nothing on a database
+     * already up to date.
      */
     public function postActivation(?ConnectionInterface $con = null): void
     {
         $database = new Database($con);
+        $database->insertSql(null, [self::ADMIN_TITLE_SCRIPT]);
 
         if ('1' !== self::getConfigValue('is_initialized')) {
             $database->insertSql(null, [__DIR__.'/Config/TheliaMain.sql']);
